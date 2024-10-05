@@ -1,0 +1,115 @@
+<!-- addproduct.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Stock</title>
+</head>
+<body>
+<h1>Scan Product Barcode</h1>
+<div id="camera-container">
+    <h2>Scan SKU Barcode</h2>
+    <button id="scanButton">Start Scanning</button>
+</div>
+<form id="barcode-form">
+    <label for="barcode">Scan Barcode (SKU):</label>
+    <input type="text" id="barcode" name="barcode" autofocus required>
+    <button type="button" onclick="fetchProduct()">Fetch Product</button>
+</form>
+
+<div id="product-details" style="display:none;">
+    <h2>Product Details</h2>
+    <p id="product-info"></p>
+
+    <form id="add-stock-form">
+        <label for="qty">Enter Quantity to Add:</label>
+        <input type="hidden" value="" name="sku" id="sku">
+        <input type="number" id="qty" name="qty" required>
+        <button type="button" onclick="addStock()">remove Stock</button>
+    </form>
+</div>
+
+<script>
+    function fetchProduct() {
+        const barcode = document.getElementById('barcode').value;
+
+        fetch(`/product/scan/${barcode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Display product details and show the form
+                    document.getElementById('product-info').innerText = `Product Name: ${data.product_name}, SKU: ${data.sku}`;
+                    document.getElementById('product-details').style.display = 'block';
+                    document.getElementById('sku').value = barcode;
+                }
+            })
+            .catch(error => console.error('Error fetching product:', error));
+    }
+  {#document.getElementById('removeStockForm').addEventListener('submit', async function(e) {#}
+  {#          e.preventDefault();#}
+  {##}
+  {#          const sku = document.getElementById('sku').value;#}
+  {#          const qty = parseInt(document.getElementById('qty').value);#}
+  {##}
+  {#          const response = await fetch('/stock/remove', {#}
+  {#              method: 'POST',#}
+  {#              headers: {#}
+  {#                  'Content-Type': 'application/json'#}
+  {#              },#}
+  {#              body: JSON.stringify({ sku, qty })#}
+  {#          });#}
+  {##}
+  {#          const result = await response.json();#}
+  {#          if (response.ok) {#}
+  {#              alert('Stock removed successfully!');#}
+  {#          } else {#}
+  {#              alert('Error: ' + result.error);#}
+  {#          }#}
+  {#      });#}
+  {#  #}
+    function addStock() {
+        const sku = document.getElementById('barcode').value;
+        const qty = document.getElementById('qty').value;
+
+        fetch('/stock/removestock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({sku: sku, qty: parseInt(qty)})
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    // Clear form after successful submission
+                    document.getElementById('barcode-form').reset();
+                    document.getElementById('product-details').style.display = 'none';
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error adding stock:', error));
+    }
+</script>
+<script>
+    document.getElementById('scanButton').addEventListener('click', function () {
+        fetch('/scan')
+            .then(response => response.json())
+            .then(data => {
+                if (data.barcode) {
+                    document.getElementById('barcode').value = data.barcode;
+                } else {
+                    console.error('No barcode detected.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</body>
+</html>

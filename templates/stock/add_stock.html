@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock{% endblock title %}
+
+{% block sidebars %}active{% endblock sidebars %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Stock Management</h4>
+                    {#                    <h6>Add Stock</h6>#}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <form id="barcode-form">
+                            <div class="form-group row">
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                    <span class="input-group-text">
+                                        <a href="javascript:void(0);" id="scanButton">Scanning</a>
+                                    </span>
+                                        <input type="number" class="form-control" id="barcode" name="barcode" autofocus
+                                               placeholder="Please Type SKU code or Scan SKU ..." required
+                                               min="0">
+                                        <span class="input-group-text">
+                                        <a href="javascript:void(0);" type="button"
+                                           onclick="fetchProduct()">Searching</a>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="display:none;" id="product-details">
+                <div class="card-body">
+                    <div>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 id="product-name"></h6>
+                                <h6 id="product-sku"></h6>
+                                <h6 id="product-stock"></h6>
+                                <br/>
+                            </div>
+
+                            <div class="col-6">
+                                <form id="add-stock-form">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-sm-6 col-8">
+                                            <div class="form-group">
+                                                <label>Add Stock : </label>
+                                                <input type="hidden" value="" name="sku" id="sku">
+                                                <input type="number" min="1" id="qty" name="qty" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 mt-4">
+                                            <button type="submit" onclick="addStock()"
+                                                    class="btn btn-submit">Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="message" id="message"></div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-top">
+                                <div class="search-set">
+                                    <div class="search-path">
+                                        <a class="btn btn-filter" id="filter_search">
+                                            <img src="/static/assets/img/icons/filter.svg" alt="img">
+                                            <span><img src="/static/assets/img/icons/closes.svg" alt="img"></span>
+                                        </a>
+                                    </div>
+                                    <div class="search-input">
+                                        <a class="btn btn-searchset">
+                                            <img src="/static/assets/img/icons/search-white.svg" alt="img">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="wordset">
+                                    <ul>
+                                        <li>
+                                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                                    src="/static/assets/img/icons/pdf.svg" alt="img"></a>
+                                        </li>
+                                        <li>
+                                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                                    src="/static/assets/img/icons/excel.svg" alt="img"></a>
+                                        </li>
+                                        <li>
+                                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                                    src="/static/assets/img/icons/printer.svg" alt="img"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive" id="stockInfo">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchProduct() {
+            const barcode = document.getElementById('barcode').value;
+
+            fetch(`/product/scan/${barcode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Display product details and show the form
+                        document.getElementById('product-name').innerText = `Product Name: ${data.product_name}`;
+                        document.getElementById('product-sku').innerText = `Product SKU: ${data.sku}`;
+
+                        document.getElementById('product-details').style.display = 'block';
+                        document.getElementById('sku').value = barcode;
+                    }
+                })
+                .catch(error => console.error('Error fetching product:', error));
+
+            const response = await fetch(`/stock/${barcode}`);
+            const data = await response.json();
+            console.log(data)
+            if (response.ok) {
+                const stockInfoDiv = document.getElementById('stockInfo');
+                let tableHtml = `
+            <table class="table datanew">
+                <thead>
+                                    <tr>
+                                        <th>Sr. No</th>
+                                          <th>Date</th>
+                        <th>+ Quantity</th>
+                        <th>- Quantity</th>
+                        <th>Total Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                <tbody>
+        `;
+
+                // Iterate over the stock data and create table rows
+                data.forEach(stock => {
+                    tableHtml += `
+                <tr>
+<td></td>
+                    <td>${new Date(stock.date).toLocaleString()}</td>
+                    <td class="bg-success text-white">${stock['+qty'] || 0}</td>
+                    <td class="bg-danger text-white">${stock['-qty'] || 0}</td>
+                    <td>${stock.total_qty}</td>
+                </tr>
+            `;
+                });
+
+                tableHtml += `
+                </tbody>
+            </table>
+        `;
+
+                // Insert the table into the div
+                stockInfoDiv.innerHTML = tableHtml;
+            } else {
+                alert(data.error || 'Error fetching stock data.');
+            }
+        }
+
+        function addStock() {
+            const sku = document.getElementById('barcode').value;
+            const qty = document.getElementById('qty').value;
+
+            fetch('/stock/addstock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({sku: sku, qty: parseInt(qty)})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        // Clear form after successful submission
+                        document.getElementById('barcode-form').reset();
+                        document.getElementById('product-details').style.display = 'none';
+                    } else if (data.error) {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error('Error adding stock:', error));
+        }
+    </script>
+
+    <script>
+        document.getElementById('scanButton').addEventListener('click', function () {
+            fetch('/scan')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.barcode) {
+                        document.getElementById('barcode').value = data.barcode;
+                    } else {
+                        console.error('No barcode detected.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+{% endblock body %}
+
+
+
+
+
+
+
+{##}
+{##}
+{#<!-- addproduct.html -->#}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Add Stock</title>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Scan Product Barcode</h1>#}
+{#<div id="camera-container">#}
+{#    <h2>Scan SKU Barcode</h2>#}
+{#    <button id="scanButton">Start Scanning</button>#}
+{#</div>#}
+{#<form id="barcode-form">#}
+{#    <label for="barcode">Scan Barcode (SKU):</label>#}
+{#    <input type="text" id="barcode" name="barcode" autofocus required>#}
+{#    <button type="button" onclick="fetchProduct()">Fetch Product</button>#}
+{#</form>#}
+{##}
+{#<div id="product-details" style="display:none;">#}
+{#    <h2>Product Details</h2>#}
+{#    <p id="product-info"></p>#}
+{##}
+{#    <form id="add-stock-form">#}
+{#        <label for="qty">Enter Quantity to Add:</label>#}
+{#        <input type="hidden" value="" name="sku" id="sku">#}
+{#        <input type="number" id="qty" name="qty" required>#}
+{#        <button type="button" onclick="addStock()">Add Stock</button>#}
+{#    </form>#}
+{#</div>#}
+
+{#</body>#}
+{#</html>#}

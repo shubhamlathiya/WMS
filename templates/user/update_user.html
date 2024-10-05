@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Update User{% endblock title %}
+
+{% block sidebarvu %}active{% endblock sidebarvu %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>User Management</h4>
+                    <h6>Update User</h6>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form id="employeeForm" method="POST" action="/user/updateuser/{{ user._id }}">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Mobile No</label>
+                                    <input type="text" id="mobile" name="mobile" value="{{ user.mobile }}" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select class="select" required name="role">
+                                        <option value="manager" {% if user.role == 'manager' %}selected{% endif %}>
+                                            Manager
+                                        </option>
+                                        <option value="employee" {% if user.role == 'employee' %}selected{% endif %}>
+                                            Employee
+                                        </option>
+                                        <option value="supplier" {% if user.role == 'supplier' %}selected{% endif %}>
+                                            Supplier
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" href="javascript:void(0);" class="btn btn-submit me-2">Submit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message" id="message"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

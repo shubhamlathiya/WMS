@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Roles Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Role Permissions for {{ role }}</h1>
+<form action="" method="POST">
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Page Name</th>
+            <th>View</th>
+            <th>Create</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for page_name, permissions in role_permissions.items() %}
+            <tr>
+                <td>{{ page_name }}</td>
+                <td>
+                    <input type="checkbox" name="{{ page_name }}_view" value="1"
+                           {% if permissions.permissions.view == 1 %}checked{% endif %}
+                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'view', this.checked)">
+                </td>
+                <td>
+                    <input type="checkbox" name="{{ page_name }}_create" value="1"
+                           {% if permissions.permissions.create == 1 %}checked{% endif %}
+                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'create', this.checked)">
+                </td>
+                <td>
+                    <input type="checkbox" name="{{ page_name }}_edit" value="1"
+                           {% if permissions.permissions.edit == 1 %}checked{% endif %}
+                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'edit', this.checked)">
+                </td>
+                <td>
+                    <input type="checkbox" name="{{ page_name }}_delete" value="1"
+                           {% if permissions.permissions.delete == 1 %}checked{% endif %}
+                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'delete', this.checked)">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+
+<script>
+    function updatePermission(pageName, role, permissionType, isChecked) {
+        const data = {
+            page_name: pageName,
+            role: role,
+            permission_type: permissionType,
+            value: isChecked ? 1 : 0  // Convert to 1 or 0
+        };
+
+        $.ajax({
+            url: '/settings/update_permission',  // Change to your update route
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log('Permission updated:', response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error updating permission:', error);
+            }
+        });
+    }
+</script>
+</body>
+</html>

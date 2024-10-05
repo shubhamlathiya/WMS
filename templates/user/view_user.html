@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}View Users{% endblock title %}
+
+{% block sidebarvu %}active{% endblock sidebarvu %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>User List</h4>
+                    <h6>Manage your User</h6>
+                </div>
+                <div class="page-btn">
+                    <a href="/user/adduser" class="btn btn-added">
+                        <img src="/static/assets/img/icons/plus.svg" alt="img" class="me-2">
+                        Add User</a>
+                </div>
+            </div>
+
+            {% if error_message %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ error_message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-top">
+                        <div class="search-set">
+                            <div class="search-path">
+                                <a class="btn btn-filter" id="filter_search">
+                                    <img src="/static/assets/img/icons/filter.svg" alt="img">
+                                    <span><img src="/static/assets/img/icons/closes.svg" alt="img"></span>
+                                </a>
+                            </div>
+                            <div class="search-input">
+                                <a class="btn btn-searchset">
+                                    <img src="/static/assets/img/icons/search-white.svg" alt="img">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wordset">
+                            <ul>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                            src="/static/assets/img/icons/pdf.svg" alt="img"></a>
+                                </li>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                            src="/static/assets/img/icons/excel.svg" alt="img"></a>
+                                </li>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                            src="/static/assets/img/icons/printer.svg" alt="img"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card" id="filter_inputs">
+                        <div class="card-body pb-0">
+                            <div class="row">
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter User Name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Phone">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Email">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <select class="select">
+                                            <option>Disable</option>
+                                            <option>Enable</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+                                    <div class="form-group">
+                                        <a class="btn btn-filters ms-auto">
+                                            <img src="/static/assets/img/icons/search-whites.svg" alt="img">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table datanew">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <label class="checkboxs">
+                                        <input type="checkbox">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </th>
+                                <th>First name</th>
+                                <th>User name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for users_list in users_list %}
+                                <tr>
+                                    <td>
+                                        <label class="checkboxs">
+                                            <input type="checkbox">
+                                            <span class="checkmarks"></span>
+                                            {{ loop.index }}
+                                        </label>
+                                    </td>
+                                    <td>{{ users_list.full_name }}</td>
+                                    <td>{{ users_list.user_name }}</td>
+                                    <td>{{ users_list.mobile }}</td>
+                                    <td>{{ users_list.email }}</td>
+                                    <td>{{ users_list.role }}</td>
+                                    <td>
+                                        <div class="status-toggle d-flex justify-content-between align-items-center">
+                                            <input type="checkbox" id="user{{ loop.index }}" name="user{{ loop.index }}"
+                                                   class="check"
+                                                   {% if users_list.status == 'true' %}checked{% endif %}
+                                             onchange="toggleStatus('{{ users_list._id }}', this.checked)">
+                                            <label for="user{{ loop.index }}" class="checktoggle">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a class="me-3" href="/user/updateuser/{{ users_list._id }}">
+                                            <img src="/static/assets/img/icons/edit.svg" alt="img">
+                                        </a>
+                                        {#                                        <a class="me-3 confirm-text" href="javascript:void(0);">#}
+                                        {#                                            <img src="/static/assets/img/icons/delete.svg" alt="img">#}
+                                        {#                                        </a>#}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    function toggleStatus(userId, isChecked) {
+        // Prepare the data to send
+        const status = isChecked ? 'true' : 'false';
+
+        // Send an AJAX POST request to the Flask route
+        fetch('/user/user_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({user_id: userId, status: status})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status updated successfully!');
+            } else {
+                alert('Error updating status.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock body %}

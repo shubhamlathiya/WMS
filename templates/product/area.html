@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Area{% endblock title %}
+
+{% block sidebara %}active{% endblock sidebara %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Area Management</h4>
+{#                    <h6>Add/Update Area</h6>#}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="/area/addarea">
+                        <div class="row">
+                            <div class="col-lg-5 col-sm-5 col-9">
+                                <div class="form-group">
+                                    <label>Area Name</label>
+                                    <input type="text" name="areaName" id="area" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-sm-5 col-9">
+                                <div class="form-group">
+                                    <label>No. of Box</label>
+                                    <input type="number" name="boxNo" id="box" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 mt-4">
+                                <button type="submit" name="submit" id="submit" href="javascript:void(0);"
+                                        class="btn btn-submit me-2">Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-top">
+                        <div class="search-set">
+                            <div class="search-path">
+                                <a class="btn btn-filter" id="filter_search">
+                                    <img src="/assets/img/icons/filter.svg" alt="img">
+                                    <span><img src="/assets/img/icons/closes.svg" alt="img"></span>
+                                </a>
+                            </div>
+                            <div class="search-input">
+                                <a class="btn btn-searchset">
+                                    <img src="/assets/img/icons/search-white.svg" alt="img">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wordset">
+                            <ul>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                            src="/assets/img/icons/pdf.svg" alt="img"></a>
+                                </li>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                            src="/assets/img/icons/excel.svg" alt="img"></a>
+                                </li>
+                                <li>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                            src="/assets/img/icons/printer.svg" alt="img"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table datanew">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <label class="checkboxs">
+                                        <input type="checkbox">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </th>
+                                <th>Sr. No</th>
+                                <th>Area name</th>
+                                <th>No. of Box</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for area_list in area %}
+                                <tr>
+                                    <td>
+                                        <label class="checkboxs">
+                                            <input type="checkbox">
+                                            <span class="checkmarks"></span>
+                                        </label>
+                                    </td>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ area_list.area_name }}</td>
+                                    <td>{{ area_list.no_box }}</td>
+                                     <td>
+                                        <div class="status-toggle d-flex justify-content-between align-items-center">
+                                            <input type="checkbox" id="area{{ loop.index }}" name="area{{ loop.index }}"
+                                                   class="check"
+                                                   {% if area_list.status  == 'true' %}checked{% endif %}>
+                                            <label for="area{{ loop.index }}" class="checktoggle">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a class="me-3" href="/area/updateuser/{{ area._id }}">
+                                            <img src="/assets/img/icons/edit.svg" alt="img">
+                                        </a>
+                                        <a class="me-3 confirm-text" href="javascript:void(0);">
+                                            <img src="/assets/img/icons/delete.svg" alt="img">
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

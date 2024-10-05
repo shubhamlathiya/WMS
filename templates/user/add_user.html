@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Add User{% endblock title %}
+
+{% block sidebarau %}active{% endblock sidebarau %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>User Management</h4>
+                    <h6>Add User</h6>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form id="userform">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="full_name" name="full_name" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    <input type="text" id="user_name" name="user_name" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <div class="pass-group">
+                                        <input type="password" class="pass-input" name="password" required>
+                                        <span class="fas toggle-password fa-eye-slash"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Mobile No</label>
+                                    <input type="text" id="mobile" name="mobile" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select class="select" required name="role">
+                                        <option value="manager" selected>Manager</option>
+                                        <option value="employee">Employee</option>
+                                        <option value="supplier">Supplier</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" href="javascript:void(0);" class="btn btn-submit me-2">Submit
+                                </button>
+                                <button type="reset" href="/user/adduser" class="btn btn-cancel">Reset</button>
+                            </div>
+                        </div>
+                        <div class="message" id="message"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('userform');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/user/adduser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                const messageDiv = document.getElementById('message');
+                if (response.ok) {
+                    messageDiv.style.color = 'green';
+                    messageDiv.textContent = 'Personnel added successfully and email sent!';
+                    window.location.href = '/user/viewuser';
+                } else {
+                    messageDiv.style.color = 'red';
+                    messageDiv.textContent = `Error: ${result.error}`;
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        });
+    </script>
+
+{% endblock body %}

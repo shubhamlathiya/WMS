@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product{% endblock title %}
+
+{% block sidebarap %}active{% endblock sidebarap %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Product Management</h4>
+                    <h6>Add Product</h6>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form id="productform" action="/product/addproduct" method="POST">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input type="text" id="productName" name="productName" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>SKU</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="sku" readonly required>
+                                        <input type="hidden" id="sku1" name="sku" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="scanButton">Scan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="number" id="price" name="price" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Min Qty</label>
+                                    <input type="number" id="min" name="min" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Max Qty</label>
+                                    <input type="number" id="max" name="max" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Area</label>
+                                    <select class="select" id="area" name="area" required>
+                                        {% for area in areas %}
+                                            <option value="{{ area['_id'] }}">{{ area.area_name }}
+                                                (Box: {{ area.no_box }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="select" id="status" name="status" required>
+                                        <option value="available" selected>Available</option>
+                                        <option value="not_available">Not Available</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button type="submit" href="javascript:void(0);" class="btn btn-submit me-2">Submit
+                                </button>
+                                <button type="reset" href="/user/adduser" class="btn btn-cancel">Reset</button>
+                            </div>
+                        </div>
+                        <div class="message" id="message"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('scanButton').addEventListener('click', function () {
+            fetch('/scan')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.barcode) {
+                        document.getElementById('sku').value = data.barcode;
+                        document.getElementById('sku1').value = data.barcode;
+                    } else {
+                        console.error('No barcode detected.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+{% endblock body %}
+
+
+
+
+
+
+
+
+
+
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Add Product</title>#}
+{#    <style>#}
+{#        #camera-container {#}
+{#            margin-top: 20px;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#<div class="container">#}
+{#    <h1>Add Product</h1>#}
+{#    <form id="productForm" action="http://127.0.0.1:5000/products" method="POST">#}
+{#        <label for="productName">Product Name</label>#}
+{#        <input type="text" id="productName" name="productName">#}
+{##}
+{#        <label for="sku">SKU</label>#}
+{#        <input type="text" id="sku" required readonly disabled>#}
+{#        <input type="hidden" id="sku1" name="sku" required>#}
+{##}
+{#        <label for="price">Price</label>#}
+{#        <input type="number" id="price" name="price" step="0.01">#}
+{##}
+{#        <label for="min">min</label>#}
+{#        <input type="number" id="min" name="min" step="1">#}
+{##}
+{#        <label for="max">max</label>#}
+{#        <input type="number" id="max" name="max" step="1">#}
+{#              <label for="image">Product Image:</label>#}
+{#    <input type="file" id="image" name="image" accept="image/*" required>#}
+{##}
+{#        <label for="status">Status</label>#}
+{#        <select id="status" name="status" required>#}
+{#            <option value="available" selected>Available</option>#}
+{#            <option value="out_of_stock">Out of Stock</option>#}
+{#            <option value="discontinued">Discontinued</option>#}
+{#        </select>#}
+{##}
+{#        <label for="description">Description</label>#}
+{#        <textarea id="description" name="description" rows="4"></textarea>#}
+{##}
+{#        <label for="area" class="form-label">Area</label>#}
+{#        <select class="form-control" id="area" name="area" required>#}
+{#            <option value="" disabled selected>Select Area</option>#}
+{#            {% for area in areas %}#}
+{#                <option value="{{ area['_id'] }}">{{ area.area_name }} (Box: {{ area.no_box }})</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#            <label for="createdBy">Created By</label>#}
+{#            <input type="text" id="createdBy" name="createdBy" required>#}
+{##}
+{#        <button type="submit">Add Product</button>#}
+{#    </form>#}
+{##}
+{#    <div id="camera-container">#}
+{#        <h2>Scan SKU Barcode</h2>#}
+{#        <button id="scanButton">Start Scanning</button>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Your JavaScript code -->#}
+{#<script>#}
+{#    document.getElementById('scanButton').addEventListener('click', function () {#}
+{#        fetch('/scan')#}
+{#            .then(response => response.json())#}
+{#            .then(data => {#}
+{#                if (data.barcode) {#}
+{#                    document.getElementById('sku').value = data.barcode;#}
+{#                    document.getElementById('sku1').value = data.barcode;#}
+{#                } else {#}
+{#                    console.error('No barcode detected.');#}
+{#                }#}
+{#            })#}
+{#            .catch(error => {#}
+{#                console.error('Error:', error);#}
+{#            });#}
+{#    });#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
