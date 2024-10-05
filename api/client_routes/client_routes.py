@@ -8,4 +8,4 @@ client = Blueprint('client', __name__)
 @client.route('/dashboard',endpoint='dashboard')
 @token_required
 def dashboard_client_home(current_user):
-    return render_template('client/order_products.html')
+    return render_template('client/client_dashboard.html')

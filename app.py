@@ -8,6 +8,9 @@ from api.auth_routes.forgot_password_routes import forgotpassword
 from api.auth_routes.auth_register_routes import register
 from api.products_routes.products_routes import product
 from api.dashboard_routes.admin_dashboard_routes import admin
+from api.dashboard_routes.manager_dashboard_routes import manager
+from api.dashboard_routes.supplier_dashboard_routes import supplier
+from api.dashboard_routes.employee_dashboard_routes import employee
 from api.stock_routes.stock_routes import stock
 from api.user_routes.user_routes import user
 from api.order_routes.order_routes import order
@@ -30,7 +33,10 @@ app.register_blueprint(login, url_prefix='/login')
 app.register_blueprint(area, url_prefix='/area')
 app.register_blueprint(forgotpassword, url_prefix='/forgotpassword')
 app.register_blueprint(register, url_prefix='/register')
-app.register_blueprint(admin, url_prefix='/dashboard')
+app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(manager, url_prefix='/manager')
+app.register_blueprint(supplier, url_prefix='/supplier')
+app.register_blueprint(employee, url_prefix='/employee')
 
 app.register_blueprint(product, url_prefix='/product')
 app.register_blueprint(order, url_prefix='/order')

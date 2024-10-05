@@ -35,8 +35,8 @@ def login_user():
             # Determine the redirection URL based on user role
             if user['role'] == 'client':
                 redirect_url = '/client/dashboard'  # Define client dashboard URL
-            elif user['role'] == 'dashboard':
-                redirect_url = '/dashboard/dashboard'
+            elif user['role'] == 'admin':
+                redirect_url = '/admin/dashboard'
             elif user['role'] == 'manager':
                 redirect_url = '/manager/dashboard'
             elif user['role'] == 'supplier':
