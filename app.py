@@ -11,12 +11,12 @@ from api.dashboard_routes.admin_dashboard_routes import admin
 from api.dashboard_routes.manager_dashboard_routes import manager
 from api.dashboard_routes.supplier_dashboard_routes import supplier
 from api.dashboard_routes.employee_dashboard_routes import employee
+from api.client_routes import client
 from api.stock_routes.stock_routes import stock
 from api.user_routes.user_routes import user
 from api.order_routes.order_routes import order
 from api.page_visibility_routes.page_visibility import settings
 from api.employee_routes.employee_tasks_routes import tasks
-from api.client_routes.client_order_routes import client
 from flask import Flask, render_template, jsonify
 import winsound
 from flask_mail import Mail
@@ -38,6 +38,7 @@ app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(manager, url_prefix='/manager')
 app.register_blueprint(supplier, url_prefix='/supplier')
 app.register_blueprint(employee, url_prefix='/employee')
+app.register_blueprint(client, url_prefix='/client')
 
 app.register_blueprint(product, url_prefix='/product')
 app.register_blueprint(order, url_prefix='/order')
@@ -45,7 +46,6 @@ app.register_blueprint(stock, url_prefix='/stock')
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(settings, url_prefix='/settings')
 app.register_blueprint(tasks, url_prefix='/tasks')
-app.register_blueprint(client, url_prefix='/client')
 # A protected route using token authentication
 
 # Flask-Mail Configuration

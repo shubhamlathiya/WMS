@@ -30,7 +30,6 @@ def login_user():
             session['user_id'] = str(user['_id'])
             session['email'] = user['email']
             session['role'] = user['role']
-            session['username'] = user['user_name']
 
             # Determine the redirection URL based on user role
             if user['role'] == 'client':
