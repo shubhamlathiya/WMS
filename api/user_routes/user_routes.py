@@ -28,13 +28,12 @@ def update_user_home(current_user, user_id):
 
     return render_template("user/update_user.html", user=user)
 
-
 @user.route('/viewuser', methods=['GET'], endpoint='viewuser')
 @token_required
 @role_required('users', 'view')
 def view_user(current_user):
     try:
-        users_list = list(mongo.db.users.find({'role': {'$in': ['manager', 'employee', 'dashboard']}}))
+        users_list = list(mongo.db.users.find({'role': {'$in': ['manager', 'employee', 'admin']}}))
         return render_template("user/view_user.html", users_list=users_list)
 
     except Exception as e:
@@ -152,6 +151,18 @@ def view_client(current_user):
     try:
         users_list = list(mongo.db.users.find({'role': 'client'}))
         return render_template("user/view_client.html", users_list=users_list)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@user.route('/viewsupplier', methods=['GET'], endpoint='viewsupplier')
+@token_required
+@role_required('users', 'view')
+def supplier_client(current_user):
+    try:
+        users_list = list(mongo.db.users.find({'role': 'supplier'}))
+        return render_template("user/view_supplier.html", users_list=users_list)
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
