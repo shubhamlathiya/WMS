@@ -18,7 +18,6 @@ from api.order_routes.order_routes import order
 from api.page_visibility_routes.page_visibility import settings
 from api.employee_routes.employee_tasks_routes import tasks
 from flask import Flask, render_template, jsonify
-import winsound
 from flask_mail import Mail
 from middleware.monitor_stock_levels import monitor_stock_levels
 
