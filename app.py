@@ -101,7 +101,8 @@ scheduler.start()
 
 if __name__ == '__main__':
     # try:
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
 # except (KeyboardInterrupt, SystemExit):
 # Shutdown the scheduler gracefully
 # scheduler.shutdown()
