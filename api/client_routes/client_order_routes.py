@@ -36,7 +36,7 @@ def order_products(current_user):
                 'stock_qty': stock_qty
             })
 
-        return render_template("client/order_products.html", products=product_list)
+        return render_template("client/client_dashboard.html", products=product_list)
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500

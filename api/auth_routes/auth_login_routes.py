@@ -16,9 +16,9 @@ def login_user():
     email = data.get('email')
     password = data.get('password')
 
-    # print(email)
+    print(email)
     user = mongo.db.users.find_one({'email': email})
-    # print(user['status'])
+    print(user['status'])
     if user and check_password_hash(user['password'], password):
         # Create JWT token
         if user['status'] == 'true':

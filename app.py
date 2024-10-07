@@ -1,7 +1,7 @@
 import subprocess
 
 from api.products_routes.area_routes import area
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 from config import init_app, mongo
 from api.auth_routes.auth_login_routes import login
 from api.auth_routes.forgot_password_routes import forgotpassword
@@ -20,7 +20,7 @@ from api.employee_routes.employee_tasks_routes import tasks
 from flask import Flask, render_template, jsonify
 import winsound
 from flask_mail import Mail
-from middleware.monitor_stock_levels import monitor_stock_levels
+# from middleware.monitor_stock_levels import monitor_stock_levels
 
 app = Flask(__name__)
 # crontab = Crontab(app)
@@ -96,9 +96,9 @@ def scan():
         return jsonify({'error': str(e)}), 500
 
 
-scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(monitor_stock_levels, 'cron', minute='*/10')
-scheduler.start()
+# scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
+# scheduler.add_job(monitor_stock_levels, 'cron', minute='*/10')
+# scheduler.start()
 
 if __name__ == '__main__':
     # try:

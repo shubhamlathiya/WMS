@@ -230,75 +230,42 @@
                             <h6>Manage your purchases</h6>
                         </div>
                     </div>
-                    <ul class=" tabs owl-carousel owl-theme owl-product  border-0 ">
-                        <li class="active" id="fruits">
-                            <div class="product-details ">
-                                <img src="/static/assets/img/product/product62.png" alt="img">
-                                <h6>Fruits</h6>
-                            </div>
-                        </li>
-                        <li id="headphone">
-                            <div class="product-details ">
-                                <img src="/static/assets/img/product/product63.png" alt="img">
-                                <h6>Headphones</h6>
-                            </div>
-                        </li>
-                        <li id="Accessories">
-                            <div class="product-details">
-                                <img src="/static/assets/img/product/product64.png" alt="img">
-                                <h6>Accessories</h6>
-                            </div>
-                        </li>
-                        <li id="Shoes">
-                            <a class="product-details">
-                                <img src="/static/assets/img/product/product65.png" alt="img">
-                                <h6>Shoes</h6>
-                            </a>
-                        </li>
-                        <li id="computer">
-                            <a class="product-details">
-                                <img src="/static/assets/img/product/product66.png" alt="img">
-                                <h6>Computer</h6>
-                            </a>
-                        </li>
-                        <li id="Snacks">
-                            <a class="product-details">
-                                <img src="/static/assets/img/product/product67.png" alt="img">
-                                <h6>Snacks</h6>
-                            </a>
-                        </li>
-                        <li id="watch">
-                            <a class="product-details">
-                                <img src="/static/assets/img/product/product68.png" alt="img">
-                                <h6>Watches</h6>
-                            </a>
-                        </li>
-                        <li id="cycle">
-                            <a class="product-details">
-                                <img src="/static/assets/img/product/product61.png" alt="img">
-                                <h6>Cycles</h6>
-                            </a>
-                        </li>
-                        <li id="fruits1">
-                            <div class="product-details ">
-                                <img src="/static/assets/img/product/product62.png" alt="img">
-                                <h6>Fruits</h6>
-                            </div>
-                        </li>
-                        <li id="headphone1">
-                            <div class="product-details ">
-                                <img src="/static/assets/img/product/product63.png" alt="img">
-                                <h6>Headphones</h6>
-                            </div>
-                        </li>
-                    </ul>
                     <div class="tabs_container">
-                        <div class="tab_content active" data-tab="fruits">
+                        <div class="tab_content active">
                             <div class="row ">
+                                {% for product in products %}
+                                    <div class="col-lg-3 col-sm-6 d-flex ">
+                                        <div class="productset flex-fill active">
+                                            <div class="productsetimg">
+                                                <!-- <img src="/static/assets/img/product/product29.jpg" alt="img">-->
+                                                <h6>Qty: 5.00</h6>
+                                                <div class="check-product">
+                                                    <i class="fa fa-check"></i>
+                                                </div>
+                                            </div>
+                                            <div class="productsetcontent">
+                                                <h5>{{ product.name }}</h5>
+                                                <h4>Avalible :{{ product.stock_qty }}</h4>
+                                                <h6>{{ product.price }}.00</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <td>{{ product.stock_qty }}</td>
+                                        <td>
+                                            {% if product.stock_qty > 0 %}
+                                                <button type="button"
+                                                        onclick="addToOrder('{{ product.sku }}', '{{ product.name }}', {{ product.price }}, {{ product.stock_qty }})">
+                                                    Add to Order
+                                                </button>
+                                            {% else %}
+                                                <span style="color: red;">Out of Stock</span>
+                                            {% endif %}
+                                        </td>
+                                {% endfor %}
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill active">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product29.jpg" alt="img">
+                                            <!-- <img src="/static/assets/img/product/product29.jpg" alt="img">-->
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -314,7 +281,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product31.jpg" alt="img">
+                                            <!--   <img src="/static/assets/img/product/product31.jpg" alt="img">-->
                                             <h6>Qty: 1.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -330,7 +297,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product35.jpg" alt="img">
+                                            <!-- <img src="/static/assets/img/product/product35.jpg" alt="img">-->
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -346,7 +313,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product37.jpg" alt="img">
+                                            <!--  <img src="/static/assets/img/product/product37.jpg" alt="img">-->
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -362,7 +329,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product54.jpg" alt="img">
+                                            <!--<img src="/static/assets/img/product/product54.jpg" alt="img">-->
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -372,58 +339,6 @@
                                             <h5>Fruits</h5>
                                             <h4>Apple</h4>
                                             <h6>1500.00</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab_content" data-tab="headphone">
-                            <div class="row ">
-                                <div class="col-lg-3 col-sm-6 d-flex ">
-                                    <div class="productset flex-fill">
-                                        <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product44.jpg" alt="img">
-                                            <h6>Qty: 5.00</h6>
-                                            <div class="check-product">
-                                                <i class="fa fa-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="productsetcontent">
-                                            <h5>Headphones</h5>
-                                            <h4>Earphones</h4>
-                                            <h6>150.00</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6 d-flex ">
-                                    <div class="productset flex-fill">
-                                        <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product45.jpg" alt="img">
-                                            <h6>Qty: 5.00</h6>
-                                            <div class="check-product">
-                                                <i class="fa fa-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="productsetcontent">
-                                            <h5>Headphones</h5>
-                                            <h4>Earphones</h4>
-                                            <h6>150.00</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-6 d-flex ">
-                                    <div class="productset flex-fill">
-                                        <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product36.jpg" alt="img">
-                                            <h6>Qty: 5.00</h6>
-                                            <div class="check-product">
-                                                <i class="fa fa-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="productsetcontent">
-                                            <h5>Headphones</h5>
-                                            <h4>Earphones</h4>
-                                            <h6>150.00</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -526,7 +441,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product47.jpg" alt="img">
+                                            {#                                            <img src="/static/assets/img/product/product47.jpg" alt="img">#}
                                             <h6>Qty: 1.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -663,7 +578,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product29.jpg" alt="img">
+                                            {#                                            <img src="/static/assets/img/product/product29.jpg" alt="img">#}
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -679,7 +594,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product31.jpg" alt="img">
+                                            {#                                            <img src="/static/assets/img/product/product31.jpg" alt="img">#}
                                             <h6>Qty: 1.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -695,7 +610,7 @@
                                 <div class="col-lg-3 col-sm-6 d-flex ">
                                     <div class="productset flex-fill">
                                         <div class="productsetimg">
-                                            <img src="/static/assets/img/product/product35.jpg" alt="img">
+                                            {#                                            <img src="/static/assets/img/product/product35.jpg" alt="img">#}
                                             <h6>Qty: 5.00</h6>
                                             <div class="check-product">
                                                 <i class="fa fa-check"></i>
@@ -854,99 +769,6 @@
                                     <li><a class="confirm-text" href="javascript:void(0);"><img
                                             src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
                                 </ul>
-                                <ul class="product-lists">
-                                    <li>
-                                        <div class="productimg">
-                                            <div class="productimgs">
-                                                <img src="/static/assets/img/product/product34.jpg" alt="img">
-                                            </div>
-                                            <div class="productcontet">
-                                                <h4>Green Nike
-                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"
-                                                       data-bs-target="#edit"><img
-                                                            src="/static/assets/img/icons/edit-5.svg"
-                                                            alt="img"></a>
-                                                </h4>
-                                                <div class="productlinkset">
-                                                    <h5>PT001</h5>
-                                                </div>
-                                                <div class="increment-decrement">
-                                                    <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
-                                                        <input type="text" name="child" value="0"
-                                                               class="quantity-field">
-                                                        <input type="button" value="+" class="button-plus inc button ">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>3000.00</li>
-                                    <li><a class="confirm-text" href="javascript:void(0);"><img
-                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
-                                </ul>
-                                <ul class="product-lists">
-                                    <li>
-                                        <div class="productimg">
-                                            <div class="productimgs">
-                                                <img src="/static/assets/img/product/product35.jpg" alt="img">
-                                            </div>
-                                            <div class="productcontet">
-                                                <h4>Banana
-                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"
-                                                       data-bs-target="#edit"><img
-                                                            src="/static/assets/img/icons/edit-5.svg"
-                                                            alt="img"></a>
-                                                </h4>
-                                                <div class="productlinkset">
-                                                    <h5>PT001</h5>
-                                                </div>
-                                                <div class="increment-decrement">
-                                                    <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
-                                                        <input type="text" name="child" value="0"
-                                                               class="quantity-field">
-                                                        <input type="button" value="+" class="button-plus inc button ">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>3000.00</li>
-                                    <li><a class="confirm-text" href="javascript:void(0);"><img
-                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
-                                </ul>
-                                <ul class="product-lists">
-                                    <li>
-                                        <div class="productimg">
-                                            <div class="productimgs">
-                                                <img src="/static/assets/img/product/product31.jpg" alt="img">
-                                            </div>
-                                            <div class="productcontet">
-                                                <h4>Strawberry
-                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"
-                                                       data-bs-target="#edit"><img
-                                                            src="/static/assets/img/icons/edit-5.svg"
-                                                            alt="img"></a>
-                                                </h4>
-                                                <div class="productlinkset">
-                                                    <h5>PT001</h5>
-                                                </div>
-                                                <div class="increment-decrement">
-                                                    <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
-                                                        <input type="text" name="child" value="0"
-                                                               class="quantity-field">
-                                                        <input type="button" value="+" class="button-plus inc button ">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>3000.00</li>
-                                    <li><a class="confirm-text" href="javascript:void(0);"><img
-                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
-                                </ul>
                             </div>
                         </div>
                         <div class="split-card">
@@ -994,31 +816,6 @@
                                 <h5>Checkout</h5>
                                 <h6>60.00$</h6>
                             </div>
-                            <div class="btn-pos">
-                                <ul>
-                                    <li>
-                                        <a class="btn"><img src="/static/assets/img/icons/pause1.svg" alt="img"
-                                                            class="me-1">Hold</a>
-                                    </li>
-                                    <li>
-                                        <a class="btn"><img src="/static/assets/img/icons/edit-6.svg" alt="img"
-                                                            class="me-1">Quotation</a>
-                                    </li>
-                                    <li>
-                                        <a class="btn"><img src="/static/assets/img/icons/trash12.svg" alt="img"
-                                                            class="me-1">Void</a>
-                                    </li>
-                                    <li>
-                                        <a class="btn"><img src="/static/assets/img/icons/wallet1.svg" alt="img"
-                                                            class="me-1">Payment</a>
-                                    </li>
-                                    <li>
-                                        <a class="btn" data-bs-toggle="modal" data-bs-target="#recents"><img
-                                                src="/static/assets/img/icons/transcation.svg" alt="img" class="me-1">
-                                            Transaction</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1026,6 +823,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="calculator" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
