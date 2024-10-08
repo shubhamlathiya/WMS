@@ -180,38 +180,38 @@
                                 <h4>Total items : 4</h4>
                                 <a href="javascript:void(0);">Clear all</a>
                             </div>
-                            <div class="product-table">
-                                <ul class="product-lists">
-                                    <li>
-                                        <div class="productimg">
-                                            <div class="productimgs">
-                                                <img src="/static/assets/img/product/product30.jpg" alt="img">
-                                            </div>
-                                            <div class="productcontet">
-                                                <h4>Pineapple
-                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"
-                                                       data-bs-target="#edit"><img
-                                                            src="/static/assets/img/icons/edit-5.svg"
-                                                            alt="img"></a>
-                                                </h4>
-                                                <div class="productlinkset">
-                                                    <h5>PT001</h5>
-                                                </div>
-                                                <div class="increment-decrement">
-                                                    <div class="input-groups">
-                                                        <input type="button" value="-" class="button-minus dec button">
-                                                        <input type="text" name="child" value="0"
-                                                               class="quantity-field">
-                                                        <input type="button" value="+" class="button-plus inc button ">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>3000.00</li>
-                                    <li><a class="confirm-text" href="javascript:void(0);"><img
-                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
-                                </ul>
+                            <div class="product-table" id="product-lists">
+{#                                <ul class="product-lists" >#}
+{#                                    <li>#}
+{#                                        <div class="productimg">#}
+{#                                            <div class="productimgs">#}
+{#                                                <img src="/static/assets/img/product/product30.jpg" alt="img">#}
+{#                                            </div>#}
+{#                                            <div class="productcontet">#}
+{#                                                <h4>Pineapple#}
+{#                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"#}
+{#                                                       data-bs-target="#edit"><img#}
+{#                                                            src="/static/assets/img/icons/edit-5.svg"#}
+{#                                                            alt="img"></a>#}
+{#                                                </h4>#}
+{#                                                <div class="productlinkset">#}
+{#                                                    <h5>PT001</h5>#}
+{#                                                </div>#}
+{#                                                <div class="increment-decrement">#}
+{#                                                    <div class="input-groups">#}
+{#                                                        <input type="button" value="-" class="button-minus dec button">#}
+{#                                                        <input type="text" name="child" value="0"#}
+{#                                                               class="quantity-field">#}
+{#                                                        <input type="button" value="+" class="button-plus inc button ">#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </li>#}
+{#                                    <li>3000.00</li>#}
+{#                                    <li><a class="confirm-text" href="javascript:void(0);"><img#}
+{#                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>#}
+{#                                </ul>#}
                             </div>
                         </div>
                         <div class="split-card">
@@ -267,7 +267,249 @@
         </div>
     </div>
 </div>
+ <script>
+        let orderList = [];
 
+        // Function to add product to the order_routes list
+        function addToOrder(productId, productName, productPrice, stockQty) {
+            // Check if the product already exists in the order_routes list
+            let existingProduct = orderList.find(product => product.id === productId);
+
+            if (existingProduct) {
+                // If the product exists, increase its quantity by 1, but not exceeding the available stock
+                if (existingProduct.qty < existingProduct.maxQty) {
+                    existingProduct.qty += 1;
+                } else {
+                    alert('Cannot add more than available stock.');
+                }
+            } else {
+                // Add new product to order_routes list if it doesn't exist
+                orderList.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    qty: 1, // Default quantity
+                    maxQty: stockQty // Maximum available stock
+                });
+            }
+
+
+            renderOrderList();
+            calculateTotal();
+        }
+
+        // Function to render the order_routes list
+        function renderOrderList() {
+            let orderListTable = document.getElementById('product-lists');
+
+            if (orderListTable) {
+                orderListTable.innerHTML = ''; // Clear the existing order list
+
+                orderList.forEach((product, index) => {
+                    orderListTable.innerHTML += `
+<ul class="product-lists" >
+                                    <li>
+                                        <div class="productimg">
+                                            <div class="productimgs">
+                                                <img src="/static/assets/img/product/product30.jpg" alt="img">
+                                            </div>
+                                            <div class="productcontet">
+                                                <h4>${product.name}
+                                                    <a href="javascript:void(0);" class="ms-2" data-bs-toggle="modal"
+                                                       data-bs-target="#edit"><img
+                                                            src="/static/assets/img/icons/edit-5.svg"
+                                                            alt="img"></a>
+                                                </h4>
+                                                <div class="productlinkset">
+                                                    <h5>PT001</h5>
+                                                </div>
+                                                <div class="increment-decrement">
+                                                    <div class="input-groups">
+                                                        <input type="button" value="-" class="button-minus dec button">
+                                                        <input type="text" name="child" value="1"
+                                                               class="quantity-field">
+                                                        <input type="button" value="+" class="button-plus inc button ">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>${product.price}.00</li>
+                                    <li><a class="confirm-text" href="javascript:void(0);"><img
+                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
+                                </ul>
+
+            `;
+                });
+            } else {
+                console.error("Element with ID 'order-list' not found.");
+            }
+        }
+ {#<tr>#}
+                {#    <td></td>#}
+                {#    <td></td>#}
+                {#    <td>#}
+                {#        <input type="number" value="${product.qty}" min="1" max="${product.maxQty}"#}
+                {#               onchange="updateQty(${index}, this.value)" />#}
+                {#    </td>#}
+                {#    <td>#}
+                {#        <button type="button" onclick="removeFromOrder(${index})">Remove</button>#}
+                {#    </td>#}
+                {#</tr>#}
+
+        // Function to update the quantity of a product in the order_routes list
+        function updateQty(index, qty) {
+            if (qty <= orderList[index].maxQty) {
+                orderList[index].qty = parseInt(qty);
+            } else {
+                alert('Cannot exceed available stock.');
+                orderList[index].qty = orderList[index].maxQty;  // Reset to max stock if exceeded
+            }
+            renderOrderList();
+            calculateTotal();
+        }
+
+        // Function to remove a product from the order_routes list
+        function removeFromOrder(index) {
+            orderList.splice(index, 1);
+            renderOrderList();
+            calculateTotal();
+        }
+
+        // Function to calculate the total amount
+        function calculateTotal() {
+            let total = 0;
+            orderList.forEach(product => {
+                total += product.price * product.qty;
+            });
+
+            document.getElementById('total-amount').innerText = total.toFixed(2);
+        }
+
+        // Function to handle order_routes submission
+        function submitOrder(event) {
+            event.preventDefault();
+
+            // Get the selected payment type
+            let paymentType = document.querySelector('input[name="payment"]:checked').value;
+
+            if (orderList.length === 0) {
+                alert('Please add products to your order_routes.');
+                return;
+            }
+
+            if (!paymentType) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            // Prepare order_routes data
+            const orderData = {
+                products: orderList,
+                totalAmount: document.getElementById('total-amount').innerText,
+                paymentType: paymentType
+            };
+
+            console.log('Order Submitted:', orderData);
+            // Here, you would typically send the order_routes data to the backend using AJAX or form submission
+        }
+
+        function submitOrder(event) {
+            event.preventDefault();
+
+            let paymentType = document.querySelector('input[name="payment"]:checked').value;
+
+            if (orderList.length === 0) {
+                alert('Please add products to your order_routes.');
+                return;
+            }
+
+            if (!paymentType) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            const orderData = {
+                products: orderList,
+                totalAmount: document.getElementById('total-amount').innerText,
+                paymentType: paymentType
+            };
+
+            if (paymentType === 'Cash') {
+                // Directly submit order_routes data for Cash payment
+                fetch('/client/submitOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Order placed successfully!');
+                            window.location.href = data.url;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else if (paymentType === 'Credit Card' || paymentType === 'PayPal') {
+                // Initiate Razorpay payment
+                let options = {
+                    key: 'rzp_test_JWwpr1USWodaq9', // Replace with your Razorpay key
+                    amount: orderData.totalAmount * 100, // Amount in paise
+                    currency: 'INR',
+                    name: 'Your Store Name',
+                    description: 'Order Payment',
+                    image: 'https://example.com/your_logo.jpg',
+                    order_id: '', // This will be set after creating the order_routes on Razorpay
+                    handler: function (response) {
+                        // Call your backend to verify the payment and store transaction details
+                        fetch('/orders/submitOrder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                products: orderList,
+                                totalAmount: orderData.totalAmount,
+                                paymentType: paymentType,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                            })
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    alert('Order placed successfully!');
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    },
+                    prefill: {
+                        name: 'Customer Name',
+                        email: 'customer@example.com',
+                        contact: '9999999999'
+                    },
+                    notes: {
+                        address: 'Customer Address'
+                    },
+                    theme: {
+                        color: '#F37254'
+                    }
+                };
+
+                const rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+        }
+    </script>
 <script src="/static/assets/js/jquery-3.6.0.min.js"></script>
 <script src="/static/assets/js/feather.min.js"></script>
 <script src="/static/assets/js/jquery.slimscroll.min.js"></script>
