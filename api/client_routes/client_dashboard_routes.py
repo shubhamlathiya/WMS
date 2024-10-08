@@ -5,8 +5,8 @@ from . import client
 
 
 
-@client.route('/dashboard', methods=['GET'], endpoint='dashboard')
-@token_required
-@role_required('client_dashboard', 'view')
-def dashboard_home(current_user):
-    return render_template('client/client_dashboard.html')
+# @client.route('/dashboard', methods=['GET'], endpoint='dashboard')
+# @token_required
+# @role_required('client_dashboard', 'view')
+# def dashboard_home(current_user):
+#     return render_template('client/client_dashboard.html')
