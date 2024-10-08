@@ -11,7 +11,7 @@ from . import client
 
 
 # client add
-@client.route('/orderProducts', methods=['GET'], endpoint='orderProducts')
+@client.route('/dashboard', methods=['GET'], endpoint='orderProducts')
 @token_required
 # @role_required('order_routes')
 def order_products(current_user):
@@ -35,7 +35,7 @@ def order_products(current_user):
                 'price': product['price'],
                 'stock_qty': stock_qty
             })
-
+        print(product_list)
         return render_template("client/client_dashboard.html", products=product_list)
 
     except Exception as e:
