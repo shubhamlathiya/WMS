@@ -1,6 +1,11 @@
 import cv2
 from pyzbar.pyzbar import decode
-import winsound
+import os
+
+if os.name == 'nt':  # Only on Windows
+    import winsound
+
+# import winsound
 
 # Beep sound parameters
 def play_beep():

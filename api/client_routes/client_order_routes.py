@@ -5,14 +5,13 @@ from flask import Blueprint, render_template, request, jsonify, redirect, sessio
 from config import mongo
 
 from middleware.auth_middleware import token_required
-from middleware.page_visibility_middleware import role_required
+from api.client_routes.client_dashboard_routes import client
 
-# Initialize blueprint
-client = Blueprint('client', __name__)
+from . import client
 
 
 # client add
-@client.route('/orderProducts', methods=['GET'],endpoint='orderProducts')
+@client.route('/orderProducts', methods=['GET'], endpoint='orderProducts')
 @token_required
 # @role_required('order_routes')
 def order_products(current_user):
@@ -37,13 +36,13 @@ def order_products(current_user):
                 'stock_qty': stock_qty
             })
 
-        return render_template("client/order_products.html", products=product_list)
+        return render_template("client/client_dashboard.html", products=product_list)
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
-@client.route('/submitOrder', methods=['POST'])
+@client.route('/submitOrder', methods=['POST'], endpoint='submitOrder')
 @token_required
 def submit_order(current_user):
     try:

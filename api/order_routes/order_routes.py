@@ -54,6 +54,7 @@ def get_orders(current_user):
 @token_required
 def get_all_packages(current_user):
     try:
+        # Assigned , Shipment Ready,Out for Delivery,Delivered,Cancelled
         not_shipped_packages = list(mongo.db.orders.aggregate([
             {
                 '$lookup': {

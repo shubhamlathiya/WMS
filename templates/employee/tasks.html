@@ -19,7 +19,6 @@
         <th>Action</th>
     </tr>
     </thead>
-    {#    <script>console.log(JSON.stringify({{assigned_tasks}}))</script>#}
     <tbody>
     {% for assigned_tasks1 in assigned_tasks %}
         <tr>
@@ -27,38 +26,43 @@
             <td>{{ assigned_tasks1.user_details.full_name }}</td>
             <td>
                 <ul>
-                    {% for product in assigned_tasks1.order_details.products %}
-                        <li>{{ product.product_name }} - Quantity: {{ product.quantity }}</li>
+                    {% for product in assigned_tasks1.products %}
+                        <li>{{ product.product_name }} - Quantity: {{ product.quantity }} - Area Name
+                            : {{ product.area_name }}</li>
                     {% endfor %}
                 </ul>
             </td>
             <td>{{ assigned_tasks1.assigned_date }}</td>
             <td>{{ assigned_tasks1.status }}</td>
-            <td>
-                <button class="complete-order" data-order-id="{{ assigned_tasks1._id }}">Mark as Completed</button>
-            </td>
+            {% if assigned_tasks1.status == 'assigned' %}
+                <td>
+                    <button class="complete-order" data-order-id="{{ assigned_tasks1.order_id }}">Mark as Completed
+                    </button>
+                </td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>
 </table>
-{##}
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        $('.complete-order').on('click', function () {#}
-{#            const orderId = $(this).data('order-id');#}
-{#            $.ajax({#}
-{#                url: `/tasks/update/${orderId}`,#}
-{#                type: 'POST',#}
-{#                success: function (response) {#}
-{#                    alert(response.message);#}
-{#                    location.reload();  // Reload the page to see updated status#}
-{#                },#}
-{#                error: function (xhr) {#}
-{#                    alert(xhr.responseJSON.message);#}
-{#                }#}
-{#            });#}
-{#        });#}
-{#    });#}
-{#</script>#}
+
+<script>
+    $(document).ready(function () {
+        $('.complete-order').on('click', function () {
+            const orderId = $(this).data('order-id');
+            console.log(orderId)
+            $.ajax({
+                url: `/tasks/update/${orderId}`,
+                type: 'POST',
+                success: function (response) {
+                    alert(response.message);
+                    location.reload();  // Reload the page to see updated status
+                },
+                error: function (xhr) {
+                    alert(xhr.responseJSON.message);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
