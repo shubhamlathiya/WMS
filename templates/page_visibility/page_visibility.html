@@ -1,43 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Roles Management</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>User Roles</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Role Name</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for role in roles %}
-            <tr>
-                <td>{{ role }}</td>
-                <td>
-                    <a href="/settings/roles/{{ role }}">Edit</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock title %}
+
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Users Permissions</h4>
+                    <h6>View All Users</h6>
+                </div>
+                <div class="page-btn">
+                    <a class="btn btn-added" href="createpermission.html">
+                        <img src="/static/assets/img/icons/plus.svg" alt="img" class="me-1">Add User Permission</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-top">
+                        <div class="search-set">
+                            <div class="search-input">
+                                <a class="btn btn-searchset">
+                                    <img src="/static/assets/img/icons/search-white.svg" alt="img"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table  datanew">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Roles</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for role in roles %}
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ role }}</td>
+                                    <td class="text-end">
+                                        <a class="me-3" href="/settings/roles/{{ role }}">
+                                            <img src="/static/assets/img/icons/edit.svg" alt="img">
+                                        </a>
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

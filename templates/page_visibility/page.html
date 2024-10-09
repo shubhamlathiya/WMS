@@ -1,76 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Roles Management</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-<h1>Role Permissions for {{ role }}</h1>
-<form action="" method="POST">
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-        <tr>
-            <th>Page Name</th>
-            <th>View</th>
-            <th>Create</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for page_name, permissions in role_permissions.items() %}
-            <tr>
-                <td>{{ page_name }}</td>
-                <td>
-                    <input type="checkbox" name="{{ page_name }}_view" value="1"
-                           {% if permissions.permissions.view == 1 %}checked{% endif %}
-                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'view', this.checked)">
-                </td>
-                <td>
-                    <input type="checkbox" name="{{ page_name }}_create" value="1"
-                           {% if permissions.permissions.create == 1 %}checked{% endif %}
-                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'create', this.checked)">
-                </td>
-                <td>
-                    <input type="checkbox" name="{{ page_name }}_edit" value="1"
-                           {% if permissions.permissions.edit == 1 %}checked{% endif %}
-                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'edit', this.checked)">
-                </td>
-                <td>
-                    <input type="checkbox" name="{{ page_name }}_delete" value="1"
-                           {% if permissions.permissions.delete == 1 %}checked{% endif %}
-                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'delete', this.checked)">
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</form>
+{% extends 'base.html' %}
 
-<script>
-    function updatePermission(pageName, role, permissionType, isChecked) {
-        const data = {
-            page_name: pageName,
-            role: role,
-            permission_type: permissionType,
-            value: isChecked ? 1 : 0  // Convert to 1 or 0
-        };
+{% block title %}Manage Permissions{% endblock title %}
 
-        $.ajax({
-            url: '/settings/update_permission',  // Change to your update route
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function (response) {
-                console.log('Permission updated:', response);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error updating permission:', error);
-            }
-        });
-    }
-</script>
-</body>
-</html>
+{% block body %}
+
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Edit Permission</h4>
+                    <h6>Manage Edit Permissions</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <label>Role</label>
+                                <input type="text" value="{{ role }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="input-checkset">
+                                <ul>
+                                    <li>
+                                        <label class="inputcheck">Select All
+                                            <input type="checkbox" id="select-all">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="productdetails product-respon">
+                                <ul>
+                                    {% for page_name, permissions in role_permissions.items() %}
+                                        <li>
+                                            <h4>{{ page_name }}</h4>
+                                            <div class="input-checkset">
+                                                <ul>
+                                                    <li>
+                                                        <label class="inputcheck">View
+                                                            <input type="checkbox" name="{{ page_name }}_view" value="1"
+                                                                   {% if permissions.permissions.view == 1 %}checked{% endif %}
+                                                                   onclick="updatePermission('{{ page_name }}', '{{ role }}', 'view', this.checked)">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label class="inputcheck">Create
+                                                            <input type="checkbox" name="{{ page_name }}_create" value="1"
+                                                                   {% if permissions.permissions.create == 1 %}checked{% endif %}
+                                                                   onclick="updatePermission('{{ page_name }}', '{{ role }}', 'create', this.checked)">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label class="inputcheck">Edit
+                                                            <input type="checkbox" name="{{ page_name }}_edit" value="1"
+                                                                   {% if permissions.permissions.edit == 1 %}checked{% endif %}
+                                                                   onclick="updatePermission('{{ page_name }}', '{{ role }}', 'edit', this.checked)">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label class="inputcheck">Delete
+                                                            <input type="checkbox" name="{{ page_name }}_delete" value="1"
+                                                                   {% if permissions.permissions.delete == 1 %}checked{% endif %}
+                                                                   onclick="updatePermission('{{ page_name }}', '{{ role }}', 'delete', this.checked)">
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </li>
+                                                    <li>
+                                                        <label class="inputcheck">Select All
+                                                            <input type="checkbox" checked>
+                                                            <span class="checkmark"></span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updatePermission(pageName, role, permissionType, isChecked) {
+            const data = {
+                page_name: pageName,
+                role: role,
+                permission_type: permissionType,
+                value: isChecked ? 1 : 0  // Convert to 1 or 0
+            };
+
+            $.ajax({
+                url: '/settings/update_permission',  // Change to your update route
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log('Permission updated:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating permission:', error);
+                }
+            });
+        }
+    </script>
+
+{% endblock body %}
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>User Roles Management</title>#}
+{#    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Role Permissions for {{ role }}</h1>#}
+{#<form action="" method="POST">#}
+{#    <table border="1" cellpadding="10" cellspacing="0">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>Page Name</th>#}
+{#            <th>View</th>#}
+{#            <th>Create</th>#}
+{#            <th>Edit</th>#}
+{#            <th>Delete</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for page_name, permissions in role_permissions.items() %}#}
+{#            <tr>#}
+{#                <td>{{ page_name }}</td>#}
+{#                <td>#}
+{#                    <input type="checkbox" name="{{ page_name }}_view" value="1"#}
+{#                           {% if permissions.permissions.view == 1 %}checked{% endif %}#}
+{#                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'view', this.checked)">#}
+{#                </td>#}
+{#                <td>#}
+{#                    <input type="checkbox" name="{{ page_name }}_create" value="1"#}
+{#                           {% if permissions.permissions.create == 1 %}checked{% endif %}#}
+{#                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'create', this.checked)">#}
+{#                </td>#}
+{#                <td>#}
+{#                    <input type="checkbox" name="{{ page_name }}_edit" value="1"#}
+{#                           {% if permissions.permissions.edit == 1 %}checked{% endif %}#}
+{#                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'edit', this.checked)">#}
+{#                </td>#}
+{#                <td>#}
+{#                    <input type="checkbox" name="{{ page_name }}_delete" value="1"#}
+{#                           {% if permissions.permissions.delete == 1 %}checked{% endif %}#}
+{#                           onclick="updatePermission('{{ page_name }}', '{{ role }}', 'delete', this.checked)">#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+{#</form>#}
+{##}
+{#</body>#}
+{#</html>#}
