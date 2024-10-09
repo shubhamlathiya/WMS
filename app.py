@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 # from flask_uploads import UploadSet, configure_uploads, IMAGES
@@ -30,8 +31,9 @@ init_app(app)
 
 # Set a secret key for the session
 app.config['SECRET_KEY'] = 'your_secure_random_key'
-# UPLOAD_FOLDER = 'uploads/products'
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = 'uploads/products'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Register blueprints (routes)
 app.register_blueprint(login, url_prefix='/login')

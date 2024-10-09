@@ -1,8 +1,12 @@
 # import os
 # from datetime import datetime
+import os
+from datetime import datetime
 
 # from cachelib import file
 from flask import Blueprint, request, redirect, jsonify, render_template, session
+
+# from app import app
 # from flask_uploads import UploadSet, configure_uploads, IMAGES
 
 # from app import app
@@ -32,7 +36,7 @@ def view_add_product(current_user):
 @product.route('/updateproduct/<int:sku>', methods=['GET'], endpoint='updateproduct')
 @token_required
 @role_required('products', 'edit')
-def view_update_product(current_user,sku):
+def view_update_product(current_user, sku):
     areas = list(mongo.db.areas.find())
     used_area_ids = mongo.db.products.distinct('area')
 
@@ -63,27 +67,30 @@ def view_update_product(current_user,sku):
 @role_required('products', 'create')
 def add_product(current_user):
     try:
-        # if 'photo' in request.files:
-            # photo = request.files['photo']
-            # print(request.form)
-            # # print(photo)
-            # if photo:
-            #     # sku = request.form.get('sku')
-            #     ext = photo.filename.rsplit('.', 1)[1].lower()
-            #     new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
-            #     filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-            #     photo.save(filepath)
-            #     print(filepath)
+        photo = request.files['photo']
+        ext = photo.filename.rsplit('.', 1)[1].lower()
+        new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+        from app import app
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        normalized_path = filepath.replace('\\', '/')
+        print(normalized_path)
+        try:
+            photo.save(normalized_path)
+            print(f'File saved at: {normalized_path}')
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
         # # Get form data
         product_name = request.form.get('productName')
         sku = request.form.get('sku')
+        unit = request.form.get('unit')
         price = request.form.get('price')
         status = request.form.get('status')
         description = request.form.get('description')
         min = request.form.get('min')
         max = request.form.get('max')
         area = request.form.get('area')
-
+        #
         found = list(mongo.db.products.find({'sku': sku}))
         if found:
             print(found)
@@ -93,6 +100,7 @@ def add_product(current_user):
         product = {
             'product_name': product_name,
             'sku': int(sku),
+            'unit': int(unit),
             'min': int(min),
             'max': int(max),
             'price': float(price),
@@ -100,6 +108,7 @@ def add_product(current_user):
             'description': description,
             'created_by': role,
             'area_id': ObjectId(area),
+            'image': normalized_path,
         }
 
         # Insert the product into MongoDB

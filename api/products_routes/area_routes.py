@@ -12,7 +12,7 @@ area = Blueprint('area', __name__)
 @role_required('areas', 'view')
 def area_home(current_user):
     area = list(mongo.db.areas.find())
-    return render_template('area/../../templates/product/area.html', area=area)
+    return render_template('product/area.html', area=area)
 
 
 @area.route('/addarea', methods=['POST'])
