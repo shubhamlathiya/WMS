@@ -1,5 +1,7 @@
 import subprocess
 
+# from flask_uploads import UploadSet, configure_uploads, IMAGES
+
 from api.products_routes.area_routes import area
 # from apscheduler.schedulers.background import BackgroundScheduler
 from config import init_app, mongo
@@ -28,6 +30,9 @@ init_app(app)
 
 # Set a secret key for the session
 app.config['SECRET_KEY'] = 'your_secure_random_key'
+# UPLOAD_FOLDER = 'uploads/products'
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 # Register blueprints (routes)
 app.register_blueprint(login, url_prefix='/login')
 app.register_blueprint(area, url_prefix='/area')

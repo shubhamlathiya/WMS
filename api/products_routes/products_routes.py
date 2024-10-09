@@ -1,4 +1,11 @@
+# import os
+# from datetime import datetime
+
+# from cachelib import file
 from flask import Blueprint, request, redirect, jsonify, render_template, session
+# from flask_uploads import UploadSet, configure_uploads, IMAGES
+
+# from app import app
 from middleware.auth_middleware import token_required
 from config import mongo
 from bson import ObjectId
@@ -56,7 +63,18 @@ def view_update_product(current_user,sku):
 @role_required('products', 'create')
 def add_product(current_user):
     try:
-        # Get form data
+        # if 'photo' in request.files:
+            # photo = request.files['photo']
+            # print(request.form)
+            # # print(photo)
+            # if photo:
+            #     # sku = request.form.get('sku')
+            #     ext = photo.filename.rsplit('.', 1)[1].lower()
+            #     new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+            #     filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+            #     photo.save(filepath)
+            #     print(filepath)
+        # # Get form data
         product_name = request.form.get('productName')
         sku = request.form.get('sku')
         price = request.form.get('price')
