@@ -77,7 +77,7 @@ def add_product(current_user):
         ext = photo.filename.rsplit('.', 1)[1].lower()
         new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
         from app import app
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'products', new_filename)
         normalized_path = filepath.replace('\\', '/')
         print(normalized_path)
         try:

@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 from bson import ObjectId
 from flask import Flask, request, jsonify, render_template, Blueprint, redirect
 from werkzeug.security import generate_password_hash
@@ -46,33 +49,49 @@ def view_user(current_user):
 @role_required('users', 'create')
 def add_personnel(current_user):
     try:
-        data = request.json
+        data = request.form
+        # print(data)
         name = data.get('full_name')
-        uname = data.get('user_name')
         mobile = data.get('mobile')
         email = data.get('email')
         password = generate_password_hash(data.get('password'))
         role = data.get('role')
+        city = data.get('city')
+        area = data.get('area')
 
-        print("hy")
+
         if not name or not mobile or not email or not password:
             return jsonify({"error": "All fields are required"}), 400
 
+        photo = request.files['photo']
+        ext = photo.filename.rsplit('.', 1)[1].lower()
+        new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+        from app import app
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'users', new_filename)
+        normalized_path = filepath.replace('\\', '/')
+        print(normalized_path)
+        try:
+            photo.save(normalized_path)
+            print(f'File saved at: {normalized_path}')
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
         # Create a personnel document
         personnel = {
             'full_name': name,
-            'user_name': uname,
             'mobile': mobile,
             'email': email,
             'password': password,  # Store the hashed password
             'role': role,
+            'city': city,
+            'area': area,
+            'image': normalized_path,
             'status': "true"
         }
 
         # Insert into MongoDB
         mongo.db.users.insert_one(personnel)
-
-        # Prepare email details
+#
+#         # Prepare email details
         subject = f'{role} Details'
 
         body = f"""
@@ -157,7 +176,7 @@ def add_personnel(current_user):
 
         # Send email
         if send_email(subject, email, body):
-            return jsonify({"message": "Personnel added and email sent!"}), 200
+            return redirect('/user/viewuser')
         else:
             return jsonify({"error": "Failed to send email."}), 500
 
@@ -172,20 +191,22 @@ def update_user(current_user, user_id):
     try:
         # print(user_id)
         name = request.form.get('full_name')
-        uname = request.form.get('user_name')
         mobile = request.form.get('mobile')
         email = request.form.get('email')
         role = request.form.get('role')
+        city = request.form.get('city')
+        area = request.form.get('area')
 
         mongo.db.users.update_one(
             {'_id': ObjectId(user_id)},
             {
                 '$set': {
                     'full_name': name,
-                    'user_name': uname,
                     'mobile': mobile,
                     'email': email,
                     'role': role,
+                    'city': city,
+                    'area': area,
                 }
             }
         )

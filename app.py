@@ -4,7 +4,7 @@ import subprocess
 # from flask_uploads import UploadSet, configure_uploads, IMAGES
 
 from api.products_routes.area_routes import area
-# from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from config import init_app, mongo
 from api.auth_routes.auth_login_routes import login
 from api.auth_routes.forgot_password_routes import forgotpassword
@@ -22,6 +22,9 @@ from api.page_visibility_routes.page_visibility import settings
 from api.employee_routes.employee_tasks_routes import tasks
 from flask import Flask, render_template, jsonify, redirect
 from flask_mail import Mail
+
+from middleware.monitor_stock_levels import monitor_stock_levels
+
 # from middleware.monitor_stock_levels import monitor_stock_levels
 
 app = Flask(__name__)
@@ -31,7 +34,7 @@ init_app(app)
 
 # Set a secret key for the session
 app.config['SECRET_KEY'] = 'your_secure_random_key'
-UPLOAD_FOLDER = 'uploads/products'
+UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -103,9 +106,9 @@ def scan():
         return jsonify({'error': str(e)}), 500
 
 
-# scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
-# scheduler.add_job(monitor_stock_levels, 'cron', minute='*/10')
-# scheduler.start()
+scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
+scheduler.add_job(monitor_stock_levels, 'cron', minute='*/10')
+scheduler.start()
 
 if __name__ == '__main__':
     # try:
