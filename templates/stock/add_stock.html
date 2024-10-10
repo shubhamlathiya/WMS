@@ -58,7 +58,7 @@
                                             <div class="form-group">
                                                 <label>Add Stock : </label>
                                                 <input type="hidden" value="" name="sku" id="sku">
-                                                <input type="number" min="1" id="qty" name="qty" required>
+                                                <input type="number" min="1" max="1000                                                  " id="qty" name="qty" required>
                                             </div>
                                         </div>
                                         <div class="col-lg-2 mt-4">
@@ -126,7 +126,7 @@
                                     <tr>
                                         <th>Sr. No</th>
                                           <th>Date</th>
-                        <th>+ Quantity</th>
+                                            <th>+ Quantity</th>
                         <th>- Quantity</th>
                         <th>Total Quantity</th>
                                         <th>Action</th>
@@ -134,15 +134,15 @@
                                     </thead>
                 <tbody>
         `;
-
+                let no = 1;
                 // Iterate over the stock data and create table rows
                 data.forEach(stock => {
                     tableHtml += `
                 <tr>
-                    <td>1</td>
+                    <td>${no++}</td>
                     <td>${new Date(stock.date).toLocaleString()}</td>
-                    <td class="bg-success text-white">${stock['+qty'] || 0}</td>
-                    <td class="bg-danger text-white">${stock['-qty'] || 0}</td>
+                    <td style="background-color: lightgreen" class="text-black">${stock['+qty'] || 0}</td>
+                    <td style="background-color: lightcoral" class="text-black">${stock['-qty'] || 0}</td>
                     <td>${stock.total_qty}</td>
                 </tr>
             `;

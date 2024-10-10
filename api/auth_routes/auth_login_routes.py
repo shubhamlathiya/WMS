@@ -30,7 +30,8 @@ def login_user():
             session['user_id'] = str(user['_id'])
             session['email'] = user['email']
             session['role'] = user['role']
-
+            session['name']= user['full_name']
+            # print(session['name'])
             # Determine the redirection URL based on user role
             if user['role'] == 'client':
                 redirect_url = '/client/dashboard'  # Define client dashboard URL
