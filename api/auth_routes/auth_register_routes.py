@@ -133,6 +133,10 @@ def register_user():
 def register_user2():
     return render_template('auth/signup.html')
 
+@register.route('/profile', methods=['GET'])
+def profile():
+    return render_template('auth/profile.html')
+
 
 # OTP Verification Page
 @register.route('/verify-otp', methods=['GET', 'POST'])

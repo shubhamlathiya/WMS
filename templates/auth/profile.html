@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Add User{% endblock title %}
-
-{% block sidebarau %}active{% endblock sidebarau %}
+{% block title %}WMS - Profile{% endblock title %}
 
 {% block body %}
 
@@ -10,15 +8,35 @@
         <div class="content">
             <div class="page-header">
                 <div class="page-title">
-                    <h4>User Management</h4>
-                    <h6>Add User</h6>
+                    <h4>Profile</h4>
+                    <h6>User Profile</h6>
                 </div>
             </div>
+
             <div class="card">
                 <div class="card-body">
-                    <form id="userform">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="profile-set">
+                        <div class="profile-head">
+                        </div>
+                        <div class="profile-top">
+                            <div class="profile-content">
+                                <div class="profile-contentimg">
+                                    <img src="/static/assets/img/customer/customer5.jpg" alt="img" id="blah">
+                                    <div class="profileupload">
+                                        <input type="file" id="imgInp">
+                                        <a href="javascript:void(0);">
+                                            <img src="/static/assets/img/icons/edit-set.svg" alt="img"></a>
+                                    </div>
+                                </div>
+                                <div class="profile-contentname">
+                                    <h2>William Castillo</h2>
+                                    <h4>Updates Your Photo and Personal Details.</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>First Name</label>
                                     <input type="text" id="full_name" name="full_name" required>
@@ -57,60 +75,16 @@
                                     <input type="text" id="area" name="area" required>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Role</label>
-                                    <select class="select" required name="role">
-                                        <option value="manager" selected>Manager</option>
-                                        <option value="employee">Employee</option>
-                                        <option value="supplier">Supplier</option>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="col-lg-12">
                                 <button type="submit" href="javascript:void(0);" class="btn btn-submit me-2">Submit
                                 </button>
                                 <button type="reset" href="/user/adduser" class="btn btn-cancel">Reset</button>
                             </div>
-                        </div>
-                        <div class="message" id="message"></div>
-                    </form>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-    <script>
-        const form = document.getElementById('userform');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch('/user/adduser', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                const messageDiv = document.getElementById('message');
-                if (response.ok) {
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Personnel added successfully and email sent!';
-                    window.location.href = '/user/viewuser';
-                } else {
-                    messageDiv.style.color = 'red';
-                    messageDiv.textContent = `Error: ${result.error}`;
-                }
-            } catch (error) {
-                console.error('Error submitting form:', error);
-            }
-        });
-    </script>
 
 {% endblock body %}

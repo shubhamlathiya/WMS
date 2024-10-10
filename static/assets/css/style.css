@@ -1351,7 +1351,7 @@ a:focus, a:hover {
 
 .form-group textarea {
     border: 1px solid rgba(145, 158, 171, .32);
-    height: 100px;
+    height: 50px;
     width: 100%;
     font-size: 14px;
     font-weight: 400;
@@ -2535,13 +2535,13 @@ body[data-layout-mode=dark] .alertify .ajs-content .ajs-input {
     top: 0;
     right: 0
 }
-
+/*File Upload*/
 .custom-file-container .custom-file-container__image-preview {
     box-sizing: border-box;
     transition: all .2s ease;
-    margin-top: 50px;
-    margin-bottom: 40px;
-    height: 250px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    height: 300px;
     width: 100%;
     border-radius: 4px;
     background-size: contain;
@@ -2549,7 +2549,7 @@ body[data-layout-mode=dark] .alertify .ajs-content .ajs-input {
     background-repeat: no-repeat;
     background-color: #fff;
     overflow: auto;
-    padding: 15px
+    /*padding: 15px*/
 }
 
 .error-page {
