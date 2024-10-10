@@ -20,7 +20,7 @@ from api.user_routes.user_routes import user
 from api.order_routes.order_routes import order
 from api.page_visibility_routes.page_visibility import settings
 from api.employee_routes.employee_tasks_routes import tasks
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, redirect
 from flask_mail import Mail
 # from middleware.monitor_stock_levels import monitor_stock_levels
 
@@ -74,7 +74,8 @@ def home():
 @app.route('/logout', methods=['GET'])
 def logout():
     response = jsonify({'message': 'Logged out successfully!'})
-    response.set_cookie('token', '', expires=0)  # Clear the cookie
+    response.set_cookie('token', '', expires=0)
+    response = redirect('/')# Clear the cookie
     return response
 
 @app.errorhandler(404)
