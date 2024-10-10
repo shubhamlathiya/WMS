@@ -17,7 +17,7 @@ def token_required(f):
             return jsonify({'message': 'Invalid token'}), 401
         # print(data)
         current_user = data.get('email')
-        # print(current_user)
+        print(current_user)
         return f(current_user, *args, **kwargs)
 
     return decorator
