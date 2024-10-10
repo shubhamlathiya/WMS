@@ -18,33 +18,11 @@
                 <div class="card-body">
                     <div class="table-top">
                         <div class="search-set">
-                            <div class="search-path">
-                                <a class="btn btn-filter" id="filter_search">
-                                    <img src="/static/assets/img/icons/filter.svg" alt="img">
-                                    <span><img src="/static/assets/img/icons/closes.svg" alt="img"></span>
-                                </a>
-                            </div>
                             <div class="search-input">
                                 <a class="btn btn-searchset">
                                     <img src="/static/assets/img/icons/search-white.svg" alt="img">
                                 </a>
                             </div>
-                        </div>
-                        <div class="wordset">
-                            <ul>
-                                <li>
-                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
-                                            src="/static/assets/img/icons/pdf.svg" alt="img"></a>
-                                </li>
-                                <li>
-                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
-                                            src="/static/assets/img/icons/excel.svg" alt="img"></a>
-                                </li>
-                                <li>
-                                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                                            src="/static/assets/img/icons/printer.svg" alt="img"></a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
 
@@ -52,14 +30,8 @@
                         <table class="table datanew">
                             <thead>
                             <tr>
-                                <th>
-                                    <label class="checkboxs">
-                                        <input type="checkbox">
-                                        <span class="checkmarks"></span>
-                                    </label>
-                                </th>
+                                <th>No</th>
                                 <th>First name</th>
-                                <th>User name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Status</th>
@@ -68,15 +40,8 @@
                             <tbody>
                             {% for users_list in users_list %}
                                 <tr>
-                                    <td>
-                                        <label class="checkboxs">
-                                            <input type="checkbox">
-                                            <span class="checkmarks"></span>
-                                            {{ loop.index }}
-                                        </label>
-                                    </td>
+                                    <td>{{ loop.index }}</td>
                                     <td>{{ users_list.full_name }}</td>
-                                    <td>{{ users_list.user_name }}</td>
                                     <td>{{ users_list.mobile }}</td>
                                     <td>{{ users_list.email }}</td>
                                     <td>

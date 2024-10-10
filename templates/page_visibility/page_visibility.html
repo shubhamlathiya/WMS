@@ -37,17 +37,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                {% for role in roles %}
+                            {% for role in roles %}
+                                <tr>
                                     <td>{{ loop.index }}</td>
                                     <td>{{ role }}</td>
                                     <td class="text-end">
                                         <a class="me-3" href="/settings/roles/{{ role }}">
-                                            <img src="/static/assets/img/icons/edit.svg" alt="img">
+                                            <img src="/static/assets/img/icons/eye.svg" alt="img">
                                         </a>
                                     </td>
-                                    </tr>
-                                {% endfor %}
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
