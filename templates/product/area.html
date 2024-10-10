@@ -13,6 +13,11 @@
                     <h4>Area Management</h4>
                 </div>
             </div>
+            {% if error %}
+                <div id="error-message" style="color: red;">
+                    {{ error }}
+                </div>
+            {% endif %}
             <div class="card">
                 <div class="card-body">
                     <form method="POST" action="/area/addarea">
@@ -102,7 +107,7 @@
                                     <td>{{ loop.index }}</td>
                                     <td>{{ area_list.area_name }}</td>
                                     <td>{{ area_list.no_box }}</td>
-                                     <td>
+                                    <td>
                                         <div class="status-toggle d-flex justify-content-between align-items-center">
                                             <input type="checkbox" id="area{{ loop.index }}" name="area{{ loop.index }}"
                                                    class="check"

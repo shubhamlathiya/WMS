@@ -19,9 +19,9 @@ def forgot_password():
 def reset_password():
     try:
         email = request.form.get('email')
-        print(email)
+        # print(email)
         user = mongo.db.users.find_one({'email': email})
-        print(user)
+        # print(user)
         if user:
             token = s.dumps(email, salt='password-reset-salt')
             # print(token)  # Generate token
@@ -56,9 +56,6 @@ def reset_password():
         <div style="margin: 0;margin-top: 70px;padding: 92px 30px 115px;background: #ffffff;border-radius: 30px;text-align: center;">
             <div style="width: 100%; max-width: 489px; margin: 0 auto;">
                 <h1 style="margin: 0;font-size: 24px;font-weight: 500;color: #1f1f1f;">Password Forget Request</h1>
-                <p style="margin: 0;margin-top: 17px;font-size: 16px;font-weight: 500;">
-                    Hi {name},
-                </p>
                 <p style="margin: 0;margin-top: 17px;font-weight: 500;letter-spacing: 0.56px;">
                     Forget Your Password?<br/>
                     We received a request to reset the password for your account.<br/><br/>
@@ -114,7 +111,7 @@ def reset_password():
 
             send_email(subject, email, body)
 
-            flash('A password reset link has been sent to your email.', 'success')
+            print('A password reset link has been sent to your email.', 'success')
         else:
             flash('Email not found', 'danger')
         return redirect('/')

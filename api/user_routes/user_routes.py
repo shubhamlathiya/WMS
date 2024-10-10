@@ -73,7 +73,7 @@ def add_personnel(current_user):
         mongo.db.users.insert_one(personnel)
 
         # Prepare email details
-        subject = 'User Details'
+        subject = f'{role} Details'
 
         body = f"""
                <!DOCTYPE html>
