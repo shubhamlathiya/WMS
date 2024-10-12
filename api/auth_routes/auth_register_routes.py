@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 
 from config import mongo
 from email_utils import send_email
+from middleware.auth_middleware import token_required
 
 register = Blueprint('register', __name__)
 
@@ -133,10 +134,6 @@ def register_user():
 def register_user2():
     return render_template('auth/signup.html')
 
-@register.route('/profile', methods=['GET'])
-def profile():
-    return render_template('auth/profile.html')
-
 
 # OTP Verification Page
 @register.route('/verify-otp', methods=['GET', 'POST'])
@@ -169,3 +166,11 @@ def verify_otp():
             return jsonify({'error': 'Invalid OTP'}), 400
 
     return render_template('auth/otp.html')
+
+
+@register.route('/profile', methods=['GET'])
+@token_required
+def profile(current_user):
+    user = list(mongo.db.users.find({'email': current_user}))
+    print(user)
+    return render_template('auth/profile.html', user=user)
