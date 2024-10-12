@@ -9,4 +9,5 @@ employee = Blueprint('employee', __name__)
 @token_required
 @role_required('employee_dashboard', 'view')
 def dashboard_home(current_user):
+    print("hy")
     return render_template('dashboard/employee_dashboard.html')

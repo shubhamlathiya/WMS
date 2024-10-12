@@ -16,7 +16,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form id="userform">
+                    <form method="post" action="/user/adduser" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
@@ -59,6 +59,14 @@
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
+                                    <label>Area</label>
+                                    <input type="file"
+                                           class="custom-file-container__custom-file__custom-file-input"
+                                           accept="image/*" name="photo">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
                                     <label>Role</label>
                                     <select class="select" required name="role">
                                         <option value="manager" selected>Manager</option>
@@ -80,37 +88,37 @@
         </div>
     </div>
 
-    <script>
-        const form = document.getElementById('userform');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch('/user/adduser', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                const messageDiv = document.getElementById('message');
-                if (response.ok) {
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Personnel added successfully and email sent!';
-                    window.location.href = '/user/viewuser';
-                } else {
-                    messageDiv.style.color = 'red';
-                    messageDiv.textContent = `Error: ${result.error}`;
-                }
-            } catch (error) {
-                console.error('Error submitting form:', error);
-            }
-        });
-    </script>
+    {#    <script>#}
+    {#        const form = document.getElementById('userform');#}
+    {#        form.addEventListener('submit', async (event) => {#}
+    {#            event.preventDefault();#}
+    {##}
+    {#            const formData = new FormData(form);#}
+    {#            const data = Object.fromEntries(formData.entries());#}
+    {##}
+    {#            try {#}
+    {#                const response = await fetch('/user/adduser', {#}
+    {#                    method: 'POST',#}
+    {#                    headers: {#}
+    {#                        'Content-Type': 'application/json'#}
+    {#                    },#}
+    {#                    body: JSON.stringify(data)#}
+    {#                });#}
+    {##}
+    {#                const result = await response.json();#}
+    {#                const messageDiv = document.getElementById('message');#}
+    {#                if (response.ok) {#}
+    {#                    messageDiv.style.color = 'green';#}
+    {#                    messageDiv.textContent = 'Personnel added successfully and email sent!';#}
+    {#                    window.location.href = '/user/viewuser';#}
+    {#                } else {#}
+    {#                    messageDiv.style.color = 'red';#}
+    {#                    messageDiv.textContent = `Error: ${result.error}`;#}
+    {#                }#}
+    {#            } catch (error) {#}
+    {#                console.error('Error submitting form:', error);#}
+    {#            }#}
+    {#        });#}
+    {#    </script>#}
 
 {% endblock body %}
