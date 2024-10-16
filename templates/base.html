@@ -173,14 +173,10 @@
                         </a>
                     </li>
 
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="/static/assets/img/icons/sales1.svg" alt="img"><span> Orders</span>
-                            <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="#">Order List</a></li>
-                            <li><a href="#">Add Purchase</a></li>
-                            <li><a href="#">Import Purchase</a></li>
-                        </ul>
+                    <li class="{% block sidebaro %}{% endblock sidebaro %}">
+                        <a href="/order/getorders"><img src="/static/assets/img/icons/users1.svg"
+                                                        alt="img"><span> Orders</span>
+                        </a>
                     </li>
 
                     <li class="submenu">
