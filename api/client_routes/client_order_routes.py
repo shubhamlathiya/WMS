@@ -4,11 +4,11 @@ from bson import ObjectId
 from flask import Blueprint, render_template, request, jsonify, redirect, session
 from config import mongo
 
+from email_utils import send_email
 from middleware.auth_middleware import token_required
 from api.client_routes.client_dashboard_routes import client
 
 from . import client
-
 
 # client add
 @client.route('/dashboard', methods=['GET'], endpoint='orderProducts')
@@ -40,7 +40,6 @@ def order_products(current_user):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 @client.route('/submitOrder', methods=['POST'], endpoint='submitOrder')
 @token_required
@@ -123,6 +122,10 @@ def submit_order(current_user):
 
         assigned_employee = assign_order_to_employee(order_new.inserted_id)
 
+            # Send email to the client with order details
+        client_email = session['email']  # Assuming the user's email is in `current_user`
+        send_order_confirmation_email(client_email, order, ordered_products)
+
         return jsonify(
             {'status': 'success', 'message': 'Order placed successfully', 'order_id': str(order_new.inserted_id),
              'url': "/client/dashboard"}), 200
@@ -170,3 +173,36 @@ def assign_order_to_employee(order_id):
     mongo.db.assigned_tasks.insert_one(assignment)
 
     return assigned_employee
+
+def send_order_confirmation_email(email, order, products):
+    try:
+        product_details = "\n".join(
+            [f"{p['product_name']} - {p['quantity']} x {p['price']} = {p['amount']}" for p in products]
+        )
+
+        msg_body = f"""
+        Hello,
+
+        Thank you for your order!
+
+        Order Details:
+        Order ID: {str(order['_id'])}
+        Total Amount: {order['total_amount']}
+        Payment Type: {order['payment_type']}
+        Order Date: {order['order_date'].strftime('%Y-%m-%d')}
+
+        Products:
+        {product_details}
+
+        Regards,
+        Your Company Name
+        """
+
+        subject="Order Confirmation"
+
+        send_email(subject, email, msg_body)
+
+        print("Email sent successfully!")
+
+    except Exception as e:
+        print(f"Failed to send email: {str(e)}")

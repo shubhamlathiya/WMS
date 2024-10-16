@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, render_template, request, jsonify, redirect, session
 from config import mongo
 from middleware.auth_middleware import token_required
@@ -9,30 +10,49 @@ order = Blueprint('order', __name__)
 @order.route('/order', methods=['GET'], endpoint='order')
 @token_required
 def order_home(current_user):
+    all_orders = mongo.db.orders.find()
+
     return render_template('order/orders.html')
 
 
-@order.route('/getorders', methods=['GET'], endpoint='getorders')
-@token_required
-# @role_required('order_routes')
-def get_orders(current_user):
+@order.route('/getorders', methods=['GET'])
+def get_orders():
     try:
         # Fetch all orders from the database
         all_orders = mongo.db.orders.find()
 
         orders_list = []
         for order in all_orders:
-            # Create an order_routes dictionary with basic order_routes info
+            # Fetch the user details using user_id from the order
+            user = mongo.db.users.find_one({'_id': ObjectId(order['user_id'])})
+            user_details = {
+                'user_id': str(user['_id']),
+                'name': user['full_name'],
+                'email': user['email'],
+                'phone': user['mobile']
+            }
+
+            # Fetch transaction details using order_id
+            transaction = mongo.db.transactions.find_one({'order_id': ObjectId(order['_id'])})
+            transaction_details = {
+                'transaction_id': str(transaction['_id']),
+                'payment_method': transaction['payment_type'],
+                'payment_status': transaction['payment_status'],
+                'transaction_date': transaction['transaction_date'].strftime('%Y-%m-%d')
+            }
+
+            # Create an order dictionary with basic order info, user, and transaction details
             order_dict = {
                 'order_id': str(order['_id']),
-                'user_id': order['user_id'],  # Add user info if needed
+                'user': user_details,
                 'total_amount': order['total_amount'],
                 'status': order['status'],
                 'order_date': order['order_date'].strftime('%Y-%m-%d'),
-                'products': []  # List of products in the order_routes
+                'transaction': transaction_details,
+                'products': []  # List of products in the order
             }
 
-            # Add products details to the order_routes
+            # Add product details to the order
             for product in order['products']:
                 product_info = {
                     'product_name': product['product_name'],
@@ -44,11 +64,11 @@ def get_orders(current_user):
 
             orders_list.append(order_dict)
 
-        return jsonify({'status': 'success', 'orders': orders_list}), 200
+        # Return the order list with user and transaction details
+        return jsonify(orders_list), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 @order.route('/packages', methods=['GET'])
 @token_required
@@ -65,7 +85,7 @@ def get_all_packages(current_user):
                 }
             },
             {
-                '$match': {'Delivered_status': 'Not Shipped'}
+                '$match': {'status': 'Not Shipped'}
             }
         ]))
 
@@ -79,7 +99,7 @@ def get_all_packages(current_user):
                 }
             },
             {
-                '$match': {'Delivered_status': 'Shipped'}
+                '$match': {'status': 'Shipped'}
             }
         ]))
 
@@ -93,7 +113,7 @@ def get_all_packages(current_user):
                 }
             },
             {
-                '$match': {'Delivered_status': 'Delivered'}
+                '$match': {'status': 'Delivered'}
             }
         ]))
 

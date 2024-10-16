@@ -42,7 +42,6 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
-
 # Register blueprints (routes)
 app.register_blueprint(login, url_prefix='/login')
 app.register_blueprint(area, url_prefix='/area')
