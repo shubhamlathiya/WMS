@@ -7,12 +7,12 @@ from middleware.auth_middleware import token_required
 order = Blueprint('order', __name__)
 
 
-@order.route('/order', methods=['GET'], endpoint='order')
-@token_required
-def order_home(current_user):
-    all_orders = mongo.db.orders.find()
-
-    return render_template('order/orders.html')
+# @order.route('/order', methods=['GET'], endpoint='order')
+# @token_required
+# def order_home(current_user):
+#     all_orders = mongo.db.orders.find()
+#
+#     return render_template('order/orders.html')
 
 
 @order.route('/getorders', methods=['GET'])
@@ -64,11 +64,13 @@ def get_orders():
 
             orders_list.append(order_dict)
 
+        print(orders_list)
         # Return the order list with user and transaction details
-        return jsonify(orders_list), 200
+        return render_template("order/orders.html", orders_list=orders_list), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @order.route('/packages', methods=['GET'])
 @token_required
