@@ -9,7 +9,6 @@ from config import mongo
 
 login = Blueprint('login', __name__)
 
-
 @login.route('/', methods=['POST'])
 def login_user():
     data = request.get_json()
