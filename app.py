@@ -19,7 +19,6 @@ from api.stock_routes.stock_routes import stock
 from api.user_routes.user_routes import user
 from api.order_routes.order_routes import order
 from api.page_visibility_routes.page_visibility import settings
-from api.employee_routes.employee_tasks_routes import tasks
 from flask import Flask, render_template, jsonify, redirect, send_from_directory
 from flask_mail import Mail
 
@@ -58,7 +57,6 @@ app.register_blueprint(order, url_prefix='/order')
 app.register_blueprint(stock, url_prefix='/stock')
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(settings, url_prefix='/settings')
-app.register_blueprint(tasks, url_prefix='/tasks')
 # A protected route using token authentication
 
 # Flask-Mail Configuration
