@@ -69,7 +69,7 @@
                                     <label>Area</label>
                                     <select class="select" id="area" name="area" required>
                                         <option value="{{ products[0]['area_info'][0]['_id'] }}">{{ products[0]['area_info'][0]['area_name'] }}</option>
-                                        {% for area in areas %}
+                                        {% for available_areas in available_areas %}
                                             <option value="{{ available_areas['_id'] }}">{{ available_areas.area_name }}
                                                 (Box: {{ available_areas.no_box }})
                                             </option>

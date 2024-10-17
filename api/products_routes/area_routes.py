@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, render_template, request, jsonify, redirect
 
 from config import mongo
@@ -15,7 +16,7 @@ def area_home(current_user):
     return render_template('product/area.html', area=area)
 
 
-@area.route('/addarea', methods=['POST'])
+@area.route('/addarea', methods=['POST'] , endpoint='add')
 @token_required
 @role_required('areas', 'create')
 def add_area(current_user):
@@ -42,3 +43,66 @@ def add_area(current_user):
 
     except Exception as e:
         return redirect('/area/viewarea')
+
+
+@area.route('/updatearea/<area_id>', methods=['GET', 'POST'] , endpoint='update')
+@token_required
+@role_required('areas', 'edit')
+def update_area(current_user, area_id):
+    try:
+        print(current_user)
+
+        # Handle GET request to display the current area details
+        if request.method == 'GET':
+            area_record = mongo.db.areas.find_one({'_id': ObjectId(area_id)})
+            if not area_record:
+                return jsonify({'message': 'Area not found'}), 404
+
+            # Render a template to edit the area (assuming you have an 'edit_area.html' template)
+            return render_template('product/area.html', area_record=area_record)
+
+        # Handle POST request to update the area details
+        name = request.form.get('areaName')
+        no_box = request.form.get('boxNo')
+
+        # Check if the area exists
+        area_record = mongo.db.areas.find_one({'_id': ObjectId(area_id)})
+        if not area_record:
+            return jsonify({'message': 'Area not found'}), 404
+
+        # Prepare the update data
+        update_data = {
+            "$set": {
+                "area_name": name,
+                "no_box": int(no_box),
+                "status": 'true'  # You can modify this as needed
+            }
+        }
+
+        # Update the area in MongoDB
+        mongo.db.areas.update_one({'_id': ObjectId(area_id)}, update_data)
+        return redirect('/area/viewarea')
+
+    except Exception as e:
+        print(e)  # Log the error for debugging
+        return redirect('/area/viewarea')
+
+@area.route('/area_status', methods=['POST'])
+def user_status():
+    data = request.get_json()
+
+    user_id = data.get('user_id')  # User ID passed from the client-side
+    new_status = data.get('status')  # New status (true/false)
+
+    if user_id and new_status:
+        # Update the user's status in the database
+        result = mongo.db.areas.update_one(
+            {'_id': ObjectId(user_id)},
+            {'$set': {'status': new_status}}
+        )
+
+        if result.modified_count > 0:
+            return jsonify({'success': True, 'message': 'Status updated successfully'})
+        else:
+            return jsonify({'success': False, 'message': 'Status update failed'})
+    return jsonify({'success': False, 'message': 'Invalid request'}), 400

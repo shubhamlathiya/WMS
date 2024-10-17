@@ -22,7 +22,7 @@ product = Blueprint('product', __name__)
 @token_required
 @role_required('products', 'create')
 def view_add_product(current_user):
-    areas = list(mongo.db.areas.find())
+    areas = list(mongo.db.areas.find({'status': 'true'}))
 
     used_area_ids = mongo.db.products.distinct('area_id')  # Fetch areas that are already used by products
 
@@ -37,8 +37,8 @@ def view_add_product(current_user):
 @token_required
 @role_required('products', 'edit')
 def view_update_product(current_user, sku):
-    areas = list(mongo.db.areas.find())
-    used_area_ids = mongo.db.products.distinct('area')
+    areas = list(mongo.db.areas.find({'status': 'true'}))
+    used_area_ids = mongo.db.products.distinct('area_id')
 
     products = list(mongo.db.products.aggregate([
         {
