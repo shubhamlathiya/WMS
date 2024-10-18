@@ -11,7 +11,7 @@
             <div class="page-header">
                 <div class="page-title">
                     <h4>User List</h4>
-                    <h6>Manage your User</h6>
+                    <h6>Manage Users</h6>
                 </div>
                 <div class="page-btn">
                     <a href="/user/adduser" class="btn btn-added">
@@ -46,6 +46,7 @@
                                 <th>First name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
+                                <th>City</th>
                                 <th>Role</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -58,6 +59,7 @@
                                     <td>{{ users_list.full_name }}</td>
                                     <td>{{ users_list.mobile }}</td>
                                     <td>{{ users_list.email }}</td>
+                                    <td>{{ users_list.city }}</td>
                                     <td>{{ users_list.role }}</td>
                                     <td>
                                         <div class="status-toggle d-flex justify-content-between align-items-center">

@@ -69,22 +69,22 @@
                     </div>
                 </li>
 
-                {% for page in page_visibility %}
-                <li>
-                    Page Name: {{ page.page_name }}<br> Permissions:
-                    <ul>
-                        {% for role, permissions in page.roles.items() %}
-                        <li>{{ role }}:
-                            <ul>
-                                {% for action, allowed in permissions.permissions.items() %}
-                                <li>{{ action }}: {{ allowed }}</li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% endfor %}
+{#                {% for page in page_visibility %}#}
+{#                <li>#}
+{#                    Page Name: {{ page.page_name }}<br> Permissions:#}
+{#                    <ul>#}
+{#                        {% for role, permissions in page.roles.items() %}#}
+{#                        <li>{{ role }}:#}
+{#                            <ul>#}
+{#                                {% for action, allowed in permissions.permissions.items() %}#}
+{#                                <li>{{ action }}: {{ allowed }}</li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        </li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </li>#}
+{#                {% endfor %}#}
                 <li class="nav-item dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                         <img src="/static/assets/img/icons/notification-bing.svg" alt="img"> <span class="badge rounded-pill">4</span>

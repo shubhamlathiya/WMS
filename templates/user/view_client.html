@@ -34,7 +34,9 @@
                                 <th>First name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
+                                <th>City</th>
                                 <th>Status</th>
+                                <th>Address</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -44,6 +46,7 @@
                                     <td>{{ users_list.full_name }}</td>
                                     <td>{{ users_list.mobile }}</td>
                                     <td>{{ users_list.email }}</td>
+                                    <td>{{ users_list.city }}</td>
                                     <td>
                                         <div class="status-toggle d-flex justify-content-between align-items-center">
                                             <input type="checkbox" id="user{{ loop.index }}" name="user{{ loop.index }}"
@@ -53,6 +56,7 @@
                                             <label for="user{{ loop.index }}" class="checktoggle">checkbox</label>
                                         </div>
                                     </td>
+                                    <td>{{ users_list.area }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>

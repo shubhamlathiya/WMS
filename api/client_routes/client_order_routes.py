@@ -17,7 +17,7 @@ from . import client
 def order_products(current_user):
     try:
         products = mongo.db.products.find()
-
+        # print(list(products))
         product_list = []
         for product in products:
             stock_record = mongo.db.stock.find({'sku': product['sku']}).sort('date', -1).limit(1)
@@ -30,6 +30,7 @@ def order_products(current_user):
                 stock_qty = 0
 
             product_list.append({
+                'image': product['image'],
                 'name': product['product_name'],
                 'sku': product['sku'],
                 'price': product['price'],
