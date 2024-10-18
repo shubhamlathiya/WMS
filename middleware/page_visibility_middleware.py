@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import session, redirect, jsonify
+from flask import session, redirect, jsonify, render_template
 from config import mongo
 
 
@@ -27,8 +27,10 @@ def role_required(page_name, action):
                     return f(*args, **kwargs)
                 else:
                     # If the user does not have the required permission, show an error message
-                    return jsonify(
-                        {"message": f"Access Denied: You do not have permission to {action} on {page_name}"}), 403
+                    return render_template('error_handler/access_denied.html' , action=action, page_name=page_name)
+
+                    # return jsonify(
+                    #     {"message": f"Access Denied: You do not have permission to {action} on {page_name}"}), 403
             else:
                 return jsonify({"message": "Page visibility settings not found"}), 404
 
