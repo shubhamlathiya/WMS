@@ -78,7 +78,8 @@
                                         <div class="status-toggle d-flex justify-content-between align-items-center">
                                             <input type="checkbox" id="area{{ loop.index }}" name="area{{ loop.index }}"
                                                    class="check"
-                                                   {% if area_list.status  == 'true' %}checked{% endif %}>
+                                                   {% if area_list.status  == 'true' %}checked{% endif %}
+                                               onchange="toggleStatus('{{ area_list._id }}', this.checked)">
                                             <label for="area{{ loop.index }}" class="checktoggle">checkbox</label>
                                         </div>
                                     </td>
@@ -100,4 +101,29 @@
         </div>
     </div>
 
+
+<script>
+    function toggleStatus(userId, isChecked) {
+        // Prepare the data to send
+        const status = isChecked ? 'true' : 'false';
+
+        // Send an AJAX POST request to the Flask route
+        fetch('/area/area_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({user_id: userId, status: status})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status updated successfully!');
+            } else {
+                alert('Error updating status.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 {% endblock body %}
