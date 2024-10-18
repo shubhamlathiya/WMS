@@ -14,14 +14,16 @@
     <link rel="stylesheet" href="/static/assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/static/assets/plugins/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/static/assets/css/style.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
 
-<div id="global-loader"> {##}
-    <div class="whirly-loader"></div>
-    {##}
-</div>
+{#<div id="global-loader"> {##}
+{#    <div class="whirly-loader"></div>#}
+{##}
+{#</div>#}
 
 <div class="main-wrapper">
 
@@ -148,11 +150,11 @@
                         <table class="table datanew">
                             <thead>
                             <tr>
-                                <th>tasks ID</th>
-                                <th>clint name</th>
+                                <th>Tasks ID</th>
+                                <th>client name</th>
                                 <th>Products</th>
                                 <th>Date</th>
-                                <th>status</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -173,9 +175,14 @@
                                     <td>{{ assigned_tasks1.status }}</td>
                                     {% if assigned_tasks1.status == 'assigned' %}
                                         <td>
-                                            <button class="complete-order btn btn-success"
+                                            <button class="btn btn-success" id="complete-order"
                                                     data-order-id="{{ assigned_tasks1.order_id }}">Mark as Completed
                                             </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+{#                                        <td><span class="badges bg-lightred">{{ orders_list.transaction.payment_status }}</span></td>#}
+                                            <div class="badges bg-lightgreen">Task Completed</div>
                                         </td>
                                     {% endif %}
                                 </tr>
@@ -217,7 +224,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.complete-order').on('click', function () {
+        $('#complete-order').on('click', function () {
             const orderId = $(this).data('order-id');
             console.log(orderId)
             $.ajax({
