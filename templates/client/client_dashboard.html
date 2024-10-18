@@ -20,13 +20,14 @@
     <div class="whirly-loader"></div>
 </div>
 <div class="main-wrappers">
+
     <div class="header">
 
         <div class="header-left border-0 ">
-            <a href="index.html" class="logo">
+            <a href="/" class="logo">
                 <img src="/static/assets/img/logo.png" alt="">
             </a>
-            <a href="index.html" class="logo-small">
+            <a href="/" class="logo-small">
                 <img src="/static/assets/img/logo-small.png" alt="">
             </a>
         </div>
@@ -45,8 +46,8 @@
                                 <span class="status online"></span>
                             </span>
                             <div class="profilesets">
-                                <h6>John Doe</h6>
-{#                                <h5>Admin</h5>#}
+                                <h6>{{ session['name'] }}</h6>
+                                {#                                <h5>Admin</h5>#}
                             </div>
                         </div>
                         <hr class="m-0">
@@ -67,7 +68,7 @@
                             </svg>
                             Order History</a>
                         <hr class="m-0">
-                        <a class="dropdown-item logout pb-0" href="signin.html"><img
+                        <a class="dropdown-item logout pb-0" href="/logout"><img
                                 src="/static/assets/img/icons/log-out.svg"
                                 class="me-2" alt="img">Logout</a>
                     </div>
@@ -80,13 +81,12 @@
             <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="profile.html">My Profile</a>
-                <a class="dropdown-item" href="generalsettings.html">Settings</a>
-                <a class="dropdown-item" href="signin.html">Logout</a>
+                <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="/logout">Logout</a>
             </div>
         </div>
     </div>
-
 
     <div class="page-wrapper ms-0">
         <div class="content">
@@ -94,8 +94,8 @@
                 <div class="col-lg-8 col-sm-12 tabs_wrapper">
                     <div class="page-header ">
                         <div class="page-title">
-                            <h4>Products</h4>
-                            <h6>Manage your purchases</h6>
+                            <h4>View Products</h4>
+                            <h6>Create your Orders</h6>
                         </div>
                     </div>
                     <div class="tabs_container">
@@ -107,9 +107,9 @@
                                             <div class="productsetimg">
                                                 <img src="/{{ product.image }}" alt="img">
                                                 <h6>Qty: {{ product.stock_qty }}</h6>
-{#                                                <div class="check-product">#}
-{#                                                    <i class="fa fa-check"></i>#}
-{#                                                </div>#}
+                                                {#                                                <div class="check-product">#}
+                                                {#                                                    <i class="fa fa-check"></i>#}
+                                                {#                                                </div>#}
                                             </div>
                                             <div class="productsetcontent">
                                                 {#                                            <h5>Accessories</h5>#}
@@ -141,34 +141,16 @@
                     <div class="order-list">
                         <div class="orderid">
                             <h4>Order List</h4>
-                            <h5>Transaction id : #65565</h5>
+                            {#                            <h5>Transaction id : #65565</h5>#}
                         </div>
-                        <div class="actionproducts">
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0);" class="deletebg confirm-text"><img
-                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false"
-                                       class="dropset">
-                                        <img src="/static/assets/img/icons/ellipise1.svg" alt="img">
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                        data-popper-placement="bottom-end">
-                                        <li>
-                                            <a href="#" class="dropdown-item">Action</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item">Another Action</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item">Something Elses</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                        {#                        <div class="actionproducts">#}
+                        {#                            <ul>#}
+                        {#                                <li>#}
+                        {#                                    <a href="javascript:void(0);" class="deletebg confirm-text"><img#}
+                        {#                                            src="/static/assets/img/icons/delete-2.svg" alt="img"></a>#}
+                        {#                                </li>#}
+                        {#                            </ul>#}
+                        {#                        </div>#}
                     </div>
 
                     <div class="card card-order">
@@ -184,36 +166,34 @@
 
                         <div class="card-body pt-0 pb-2">
                             <div class="setvaluecash">
-                                {#                                <ul>#}
-                                {#                                    <li>#}
-                                {#                                        <a href="javascript:void(0);" class="paymentmethod">#}
-                                {#                                            <img src="/static/assets/img/icons/cash.svg" alt="img" class="me-2">#}
-                                {#                                            Cash#}
-                                {#                                        </a>#}
-                                {#                                    </li>#}
-                                {#                                    <li>#}
-                                {#                                        <a href="javascript:void(0);" class="paymentmethod" name="payment" value="Cash">#}
-                                {#                                            <img src="/static/assets/img/icons/debitcard.svg" alt="img" class="me-2" >#}
-                                {#                                            Debit#}
-                                {#                                        </a>#}
-                                {#                                    </li>#}
-                                {#                                </ul>#}
-                                <h3>Select Payment Method:</h3>
-                                <label>
-                                    <input type="radio" name="payment" value="Credit Card"> Credit Card
-                                </label>
-                                <label>
-                                    <input type="radio" name="payment" value="PayPal"> PayPal
-                                </label>
-                                <label>
-                                    <input type="radio" name="payment" value="Cash"> Cash
-                                </label>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0);" class="paymentmethod" type="radio">
+                                            <img src="/static/assets/img/icons/cash.svg" alt="img" class="me-2">
+                                            <input type="radio" name="payment" value="Cash"> Cash
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="paymentmethod" type="radio">
+                                            <img src="/static/assets/img/icons/debitcard.svg" alt="img" class="me-2">
+                                            <input type="radio" name="payment" value="PayPal"> Online
+                                        </a>
+                                    </li>
+                                </ul>
+
+
+{#                                <label>#}
+{#                                    <input type="radio" name="payment" value="PayPal"> Online#}
+{#                                </label>#}
+{#                                <label>#}
+{#                                    <input type="radio" name="payment" value="Cash"> Cash#}
+{#                                </label>#}
                             </div>
-                            <div class="btn-totallabel">
+                            <div class="btn-totallabel" onclick="submitOrder(event)">
                                 <h5>Checkout</h5>
                                 <h6 id="total-amount">00.00</h6>
                             </div>
-                            <button type="button" onclick="submitOrder(event)">Submit Order</button>
+{#                            <button type="button" onclick="submitOrder(event)">Submit Order</button>#}
                         </div>
                     </div>
                 </div>
@@ -265,7 +245,7 @@
                                     <li>
                                         <div class="productimg">
                                             <div class="productimgs">
-                                                <img src="/static/assets/img/product/product30.jpg" alt="img">
+                                                <img src="/${product.image}" alt="img">
                                             </div>
                                             <div class="productcontet">
                                                 <h4>${product.name}
