@@ -44,6 +44,30 @@ def view_user(current_user):
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
+@user.route('/viewclient', methods=['GET'], endpoint='viewclient')
+@token_required
+@role_required('users', 'view')
+def view_client(current_user):
+    try:
+        users_list = list(mongo.db.users.find({'role': 'client'}))
+        return render_template("user/view_client.html", users_list=users_list)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@user.route('/viewsupplier', methods=['GET'], endpoint='viewsupplier')
+@token_required
+@role_required('users', 'view')
+def supplier_client(current_user):
+    try:
+        users_list = list(mongo.db.users.find({'role': 'supplier'}))
+        return render_template("user/view_supplier.html", users_list=users_list)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 @user.route('/adduser', methods=['POST'], endpoint='adduser')
 @token_required
 @role_required('users', 'create')
@@ -60,21 +84,21 @@ def add_personnel(current_user):
         area = data.get('area')
 
 
-        if not name or not mobile or not email or not password:
-            return jsonify({"error": "All fields are required"}), 400
-
-        photo = request.files['photo']
-        ext = photo.filename.rsplit('.', 1)[1].lower()
-        new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
-        from app import app
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'users', new_filename)
-        normalized_path = filepath.replace('\\', '/')
-        print(normalized_path)
-        try:
-            photo.save(normalized_path)
-            print(f'File saved at: {normalized_path}')
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
+        # if not name or not mobile or not email or not password:
+        #     return jsonify({"error": "All fields are required"}), 400
+        #
+        # photo = request.files['photo']
+        # ext = photo.filename.rsplit('.', 1)[1].lower()
+        # new_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+        # from app import app
+        # filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'users', new_filename)
+        # normalized_path = filepath.replace('\\', '/')
+        # print(normalized_path)
+        # try:
+        #     photo.save(normalized_path)
+        #     print(f'File saved at: {normalized_path}')
+        # except Exception as e:
+        #     return jsonify({'error': str(e)}), 500
         # Create a personnel document
         personnel = {
             'full_name': name,
@@ -84,7 +108,7 @@ def add_personnel(current_user):
             'role': role,
             'city': city,
             'area': area,
-            'image': normalized_path,
+            # 'image': normalized_path,
             'status': "true"
         }
 
@@ -239,25 +263,3 @@ def user_status():
     return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
 
-@user.route('/viewclient', methods=['GET'], endpoint='viewclient')
-@token_required
-@role_required('users', 'view')
-def view_client(current_user):
-    try:
-        users_list = list(mongo.db.users.find({'role': 'client'}))
-        return render_template("user/view_client.html", users_list=users_list)
-
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
-
-
-@user.route('/viewsupplier', methods=['GET'], endpoint='viewsupplier')
-@token_required
-@role_required('users', 'view')
-def supplier_client(current_user):
-    try:
-        users_list = list(mongo.db.users.find({'role': 'supplier'}))
-        return render_template("user/view_supplier.html", users_list=users_list)
-
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500

@@ -22,31 +22,36 @@
                                 <div class="form-group">
                                     <label>First Name</label>
                                     <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}"
-                                           required>
+                                           required
+                                           onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Mobile No</label>
-                                    <input type="text" id="mobile" name="mobile" value="{{ user.mobile }}" required>
+                                    <input type="text" id="mobile" name="mobile" value="{{ user.mobile }}" required
+                                    onkeypress="return validateMobile(event)" minlength="10" maxlength="10">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly
+                                           disabled onkeypress="return validateEmailInput(event)">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" id="city" name="city" value="{{ user.city }}" required>
+                                    <input type="text" id="city" name="city" value="{{ user.city }}" required
+                                    onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Area</label>
-                                    <input type="text" id="area" name="area" value="{{ user.area }}" required>
+                                    <input type="text" id="area" name="area" value="{{ user.area }}" required
+                                    onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
@@ -77,4 +82,36 @@
         </div>
     </div>
 
+    <script>
+        function validateMobile(event) {
+            var input = document.getElementById('mobile').value;
+            var charCode = event.which || event.keyCode;
+
+            // Check if first digit is 7, 8, or 9
+            if (input.length === 0) {
+                return (charCode >= 55 && charCode <= 57); // 7, 8, or 9
+            }
+            // For the next 9 digits, allow only 0-9
+            else if (input.length > 0 && input.length < 10) {
+                return (charCode >= 48 && charCode <= 57); // 0-9
+            }
+            // Prevent input if length exceeds 10
+            return false;
+        }
+
+        function validateEmailInput(event) {
+        var charCode = event.which || event.keyCode;
+        var validChars = /[A-Za-z0-9@._-]/; // Allow letters, digits, '@', '.', '_', '-'
+
+        // Convert the charCode to a character and check if it's valid
+        var charTyped = String.fromCharCode(charCode);
+        if (validChars.test(charTyped)) {
+            return true;
+        } else {
+            document.getElementById('error-message').textContent = 'Invalid character for email!';
+            return false;
+        }
+    }
+
+    </script>
 {% endblock body %}

@@ -29,14 +29,15 @@
                         <div class="form-login">
                             <label>Full Name</label>
                             <div class="form-addons">
-                                <input type="text" placeholder="Enter your full name" name="full_name">
+                                <input type="text" placeholder="Enter your full name" name="full_name" required
+                                onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32">
                                 <img src="/static/assets/img/icons/users1.svg" alt="img">
                             </div>
                         </div>
                         <div class="form-login">
                             <label>Email</label>
                             <div class="form-addons">
-                                <input type="email" placeholder="Enter your email address" name="email">
+                                <input type="email" placeholder="Enter your email address" name="email" required>
                                 <img src="/static/assets/img/icons/mail.svg" alt="img">
                             </div>
                         </div>
@@ -44,7 +45,7 @@
                             <label>Password</label>
                             <div class="pass-group">
                                 <input type="password" class="pass-input" placeholder="Enter your password"
-                                       name="password">
+                                       name="password" required>
                                 <span class="fas toggle-password fa-eye-slash"></span>
                             </div>
                         </div>

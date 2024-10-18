@@ -28,7 +28,9 @@
                         <div class="form-login">
                             <label>Enter OTP</label>
                             <div class="pass-group">
-                                <input type="number" id="otp" name="otp" minlength="4" maxlength="4" class="pass-input" placeholder="Enter your valid OTP"/>
+                                <input type="text" id="otp" name="otp" minlength="4" maxlength="4" class="pass-input"
+                                       required placeholder="Enter your valid OTP"
+                                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"/>
                                 <span class="fas toggle-password fa-eye-slash"></span>
                             </div>
                         </div>

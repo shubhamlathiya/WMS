@@ -8,24 +8,24 @@ from middleware.page_visibility_middleware import role_required
 stock = Blueprint('stock', __name__)
 
 
-@stock.route('/addstock', methods=['GET'], endpoint='addstock')
+@stock.route('/managestock', methods=['GET'], endpoint='addstock')
 @token_required
 @role_required('stocks', 'create')
 def stock_home(current_user):
     return render_template('stock/add_stock.html')
 
 
-@stock.route('/removestock', methods=['GET'], endpoint='stock_remove')
-@token_required
-def remove_stock(current_user):
-    return render_template('stock/remove_stock.html')
+# @stock.route('/removestock', methods=['GET'], endpoint='stock_remove')
+# @token_required
+# def remove_stock(current_user):
+#     return render_template('stock/remove_stock.html')
 
 
-@stock.route('/viewstock', methods=['GET'], endpoint='stock_view')
-@token_required
-@role_required('stocks', 'view')
-def view_stock(current_user):
-    return render_template('stock/view_stock.html')
+# @stock.route('/viewstock', methods=['GET'], endpoint='stock_view')
+# @token_required
+# @role_required('stocks', 'view')
+# def view_stock(current_user):
+#     return render_template('stock/view_stock.html')
 
 
 @stock.route('/addstock', methods=['POST'], endpoint='addStock')
