@@ -84,7 +84,7 @@ while cap.isOpened():
         # Decode the barcode data
         barcode_data = barcode.data.decode('utf-8')
         if barcode_data:
-            print(f"Barcode data: {barcode_data}")
+            print(f"{barcode_data}")
             # Display the barcode data on the frame
             cv2.putText(frame, barcode_data, (50, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
 

@@ -68,10 +68,10 @@ def view_update_product(current_user, sku):
 def add_product(current_user):
     try:
         # check products are extsting or not
-        sku = request.form.get('sku')
-        found = mongo.db.products.find({'sku': sku})
-        if found:
-            return jsonify({'message': 'Products already exists'}), 400
+        # sku = request.form.get('sku')
+        # found = mongo.db.products.find({'sku': sku})
+        # if found:
+        #     return jsonify({'message': 'Products already exists'}), 400
 
         photo = request.files['photo']
         ext = photo.filename.rsplit('.', 1)[1].lower()
