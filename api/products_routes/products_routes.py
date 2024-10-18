@@ -121,12 +121,12 @@ def add_product(current_user):
         mongo.db.products.insert_one(product)
 
         # On success, redirect to the dashboard
-        # flash('Product added successfully!')
+        print('Product added successfully!')
         return redirect('/product/viewproduct')
 
     except Exception as e:
         # Handle errors and provide feedback
-        # flash(f'An error occurred: {str(e)}')
+        print(f'An error occurred: {str(e)}')
         return redirect('/product/viewproduct')
 
 
