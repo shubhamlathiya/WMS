@@ -98,7 +98,7 @@ def submit_order(current_user):
             'payment_type': payment_type,
             'order_date': datetime.now(),
             'status': [  # Status array to track the order lifecycle
-                {'status': 'submitted', 'timestamp': datetime.now()}
+                {'status': 'Submitted', 'timestamp': datetime.now()}
             ]
         }
 
@@ -128,7 +128,7 @@ def submit_order(current_user):
         # Step 2: Update the order status to 'assigned' in the statuses array (without employee info)
         mongo.db.orders.update_one(
             {'_id': order_new.inserted_id},
-            {'$push': {'statuses': {'status': 'assigned', 'timestamp': datetime.now()}}}
+            {'$push': {'status': {'status': 'Assigned', 'timestamp': datetime.now()}}}
         )
 
         # Send email to the client with order details
@@ -178,7 +178,7 @@ def assign_order_to_employee(order_id):
         'order_id': ObjectId(order_id),
         'employee_id': assigned_employee['_id'],
         'assigned_date': datetime.now(),
-        'status': 'assigned'
+        'status': 'Assigned'
     }
     mongo.db.assigned_tasks.insert_one(assignment)
 
