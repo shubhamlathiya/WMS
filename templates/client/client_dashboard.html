@@ -119,7 +119,7 @@
                                                 {#                                                <button class="btn btn-success">#}
                                                 {% if product.stock_qty > 0 %}
                                                     <button type="button" class="btn btn-success"
-                                                            onclick="addToOrder('{{ product.sku }}', '{{ product.name }}', {{ product.price }}, {{ product.stock_qty }})">
+                                                            onclick="addToOrder('{{ product.sku }}', '{{ product.name }}', {{ product.price }}, {{ product.stock_qty }},'{{ product.image }}')">
                                                         Add to Order
                                                     </button>
                                                 {% else %}
@@ -205,10 +205,10 @@
     let orderList = [];
 
     // Function to add product to the order_routes list
-    function addToOrder(productId, productName, productPrice, stockQty) {
+    function addToOrder(productId, productName, productPrice, stockQty , image) {
         // Check if the product already exists in the order_routes list
         let existingProduct = orderList.find(product => product.id === productId);
-
+        {#console.log(image)#}
         if (existingProduct) {
             // If the product exists, increase its quantity by 1, but not exceeding the available stock
             if (existingProduct.qty < existingProduct.maxQty) {
@@ -220,6 +220,7 @@
             // Add new product to order_routes list if it doesn't exist
             orderList.push({
                 id: productId,
+                image:image,
                 name: productName,
                 price: productPrice,
                 qty: 1, // Default quantity

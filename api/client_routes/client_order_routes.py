@@ -46,14 +46,13 @@ def order_products(current_user):
 @token_required
 def submit_order(current_user):
     try:
-
+        # Parse order details
         order_details = request.json  # Expecting JSON data
-        print(order_details)
         total_amount = float(order_details['totalAmount'])  # Parse the total amount
         payment_type = order_details['paymentType']  # Payment type (Cash, Razorpay, etc.)
         ordered_products = []
 
-        # Iterate through each product in the order_routes
+        # Iterate through each product in the order
         for product in order_details['products']:
             product_id = product['id']
             quantity = int(product['qty'])  # Quantity ordered
@@ -81,7 +80,6 @@ def submit_order(current_user):
             # Insert new stock record into the stock collection
             new_stock_record = mongo.db.stock.insert_one(new_stock_entry)
 
-            print(new_stock_record)
             # Append product to the ordered products list
             ordered_products.append({
                 'product_id': str(product_record['_id']),  # Convert ObjectId to string
@@ -92,19 +90,21 @@ def submit_order(current_user):
                 'stock_record_id': str(new_stock_record.inserted_id)  # Track the stock record ID
             })
 
-        # Create the order_routes object
+        # Create the order object with status array
         order = {
             'user_id': ObjectId(session['user_id']),  # Replace with `current_user` if available
             'products': ordered_products,
             'total_amount': total_amount,
-            'status': 'submitted',
             'payment_type': payment_type,
-            'order_date': datetime.now()
+            'order_date': datetime.now(),
+            'status': [  # Status array to track the order lifecycle
+                {'status': 'submitted', 'timestamp': datetime.now()}
+            ]
         }
 
-        # Insert the order_routes into the orders collection
+        # Insert the order into the orders collection
         order_new = mongo.db.orders.insert_one(order)
-        print(order_new)
+
         # Handle payment processing
         if payment_type == 'Cash':
             transaction_status = 'pending'
@@ -119,20 +119,29 @@ def submit_order(current_user):
             'transaction_date': datetime.now()
         }
 
+        # Insert the transaction record into the transactions collection
         mongo.db.transactions.insert_one(transaction)
 
-        assigned_employee = assign_order_to_employee(order_new.inserted_id)
+        # Step 1: Assign employee to the order (without adding to status)
+        assign_order_to_employee(order_new.inserted_id)
 
-            # Send email to the client with order details
-        client_email = session['email']  # Assuming the user's email is in `current_user`
+        # Step 2: Update the order status to 'assigned' in the statuses array (without employee info)
+        mongo.db.orders.update_one(
+            {'_id': order_new.inserted_id},
+            {'$push': {'statuses': {'status': 'assigned', 'timestamp': datetime.now()}}}
+        )
+
+        # Send email to the client with order details
+        client_email = session['email']  # Assuming the user's email is in `session`
         send_order_confirmation_email(client_email, order, ordered_products)
 
         return jsonify(
-            {'status': 'success', 'message': 'Order placed successfully', 'order_id': str(order_new.inserted_id),
+            {'status': 'success', 'message': 'Order placed and assigned successfully', 'order_id': str(order_new.inserted_id),
              'url': "/client/dashboard"}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 
 def assign_order_to_employee(order_id):

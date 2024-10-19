@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, request, jsonify, render_template, Blueprint , session
 from middleware.auth_middleware import token_required
 from middleware.page_visibility_middleware import role_required
@@ -137,9 +139,82 @@ def dashboard_home(current_user):
 def update_order_status(current_user, order_id):
     try:
         print(f"updated : {order_id}")
-        # Assigned , Shipment Ready,Out for Delivery,Delivered,Cancelled
-        mongo.db.orders.update_one({'_id': ObjectId(order_id)}, {'$set': {'status': 'Shipment Ready'}})
-        mongo.db.assigned_tasks.update_one({'order_id': ObjectId(order_id)}, {'$set': {'status': 'Shipment Ready'}})
-        return jsonify({'status': 'success', 'message': 'Order status updated successfully.'}), 200
+
+        # Step 1: Update order status to 'Shipment Ready' in the orders collection
+        mongo.db.orders.update_one(
+            {'_id': ObjectId(order_id)},
+            {'$push': {
+                'status': {
+                    'status': 'Shipment Ready',
+                    'updated_at': datetime.now()
+                }
+            }}
+        )
+        print("1")
+
+        # Step 2: Update the assigned_tasks collection
+        mongo.db.assigned_tasks.update_one(
+            {'order_id': ObjectId(order_id)},
+            {
+                '$set': {
+                    'status': 'Shipment Ready'  # Set current status directly
+                }
+            }
+        )
+
+        print("2")
+        # Fetch the order details
+        order = mongo.db.orders.find_one({'_id': ObjectId(order_id)})
+        if not order:
+            return jsonify({'status': 'error', 'message': 'Order not found'}), 404
+
+        # Fetch the client (user) information
+        client = mongo.db.users.find_one({'_id': ObjectId(order['user_id'])})
+        if not client:
+            return jsonify({'status': 'error', 'message': 'Client not found'}), 404
+
+        client_city = client['city']
+        print("3")
+
+        # Step 3: Find available suppliers in the client's city
+        available_suppliers = list(mongo.db.users.find({
+            'city': client_city,
+            'role': 'supplier',
+            'status': 'true'  # Only get active suppliers
+        }))
+
+        if not available_suppliers:
+            return jsonify({'status': 'error', 'message': 'No available suppliers in the client\'s city'}), 404
+
+        print("4")
+
+        # Step 4: Assign the order to the first available supplier
+        assigned_supplier = available_suppliers[0]
+
+        # Step 5: Push the supplier assignment into assigned_tasks
+        mongo.db.assigned_tasks.update_one(
+            {'order_id': ObjectId(order_id)},
+            {
+                '$set': {
+                    'supplier_id': ObjectId(assigned_supplier['_id']),  # Add supplier ID
+                    'status': 'Assigned to Supplier'  # Update the current status
+                }
+            }
+        )
+
+        # Update the orders collection again to add the assignment status
+        mongo.db.orders.update_one(
+            {'_id': ObjectId(order_id)},
+            {'$push': {
+                'status': {
+                    'status': 'Assigned to Supplier',
+                    'updated_at': datetime.now()
+                }
+            }}
+        )
+        print("5")
+        return jsonify({'status': 'success', 'message': 'Order assigned to supplier successfully.'}), 200
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
