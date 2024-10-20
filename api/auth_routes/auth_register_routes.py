@@ -8,7 +8,6 @@ from middleware.auth_middleware import token_required
 
 register = Blueprint('register', __name__)
 
-
 @register.route('/', methods=['POST'])
 def register_user():
     # data = request.get_json()
@@ -111,7 +110,7 @@ def register_user():
 </body>
 </html>
 """
-
+   
     # body = f"Your OTP is {otp}. Please enter this to complete your registration."
     send_email(subject, email, body)
 
@@ -129,11 +128,9 @@ def register_user():
     # return jsonify({'message': 'User registered successfully!'})
     return redirect('/register/verify-otp')
 
-
 @register.route('/', methods=['GET'])
 def register_user2():
     return render_template('auth/signup.html')
-
 
 # OTP Verification Page
 @register.route('/verify-otp', methods=['GET', 'POST'])
@@ -167,36 +164,9 @@ def verify_otp():
 
     return render_template('auth/otp.html')
 
-
 @register.route('/profile', methods=['GET'])
 @token_required
 def profile(current_user):
     user = list(mongo.db.users.find({'email': current_user}))
     print(user)
     return render_template('auth/profile.html', user=user)
-
-
-@register.route('/profile/update/<user_id>', methods=['POST'], endpoint='update_profile')
-@token_required
-def profile_update(current_user, user_id):
-    # print(request.form)
-    full_name = request.form.get('full_name')
-    city = request.form.get('city')
-    area = request.form.get('area')
-    mobile = request.form.get('mobile')
-    address = request.form.get('address')
-
-    mongo.db.users.update_one(
-        {'email': current_user},
-        {
-            '$set': {
-                'full_name': full_name,
-                'city': city,
-                'area': area,
-                'mobile': mobile,
-                'address': address
-            }
-        }
-    )
-
-    return redirect('/register/profile')
