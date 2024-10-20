@@ -32,6 +32,7 @@ def order_products(current_user):
             product_list.append({
                 'image': product['image'],
                 'name': product['product_name'],
+                'unit':product['unit'],
                 'sku': product['sku'],
                 'price': product['price'],
                 'stock_qty': stock_qty

@@ -26,7 +26,7 @@ def get_supplier_orders(current_user):
 
         if not assigned_tasks:
             error = "No orders assigned to this supplier."
-            return render_template('dashboard/supplier.html', error=error)
+            return render_template('dashboard/supplier_dashboard.html', error=error)
             # return jsonify({'status': 'error', 'message': 'No orders assigned to this supplier.'}), 404
 
         # Create a list to hold orders details
@@ -67,7 +67,7 @@ def get_supplier_orders(current_user):
                 orders_details.append(order_detail)
 
         # return jsonify({'status': 'success', 'orders': orders_details}), 200
-        return render_template('dashboard/supplier.html', orders_details=orders_details)
+        return render_template('dashboard/supplier_dashboard.html', orders_details=orders_details)
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
