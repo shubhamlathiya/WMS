@@ -271,7 +271,7 @@ def deliver_order(current_user, order_id):
                 {'order_id': ObjectId(order_id)},
                 {
                     '$set': {
-                        'status': 'Paid',
+                        'payment_status': 'Paid',
                         'transaction_date': datetime.now()  # Update the current status
                     }
                 }
