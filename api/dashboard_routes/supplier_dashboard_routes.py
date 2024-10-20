@@ -208,8 +208,8 @@ def pickup_multiple_orders(current_user):
 
             send_email(subject, client['email'], body)
 
-        return redirect('/supplier/dashboard')
-        # return jsonify({'status': 'success', 'message': 'Orders picked up and OTP sent to customers.'}), 200
+        # return redirect('/supplier/dashboard')
+        return jsonify({'status': 'success', 'message': 'Orders picked up and OTP sent to customers.', 'url': "/supplier/dashboard"}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
