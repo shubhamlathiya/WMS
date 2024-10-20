@@ -164,6 +164,7 @@ def verify_otp():
 
     return render_template('auth/otp.html')
 
+# admin and manager
 @register.route('/profile', methods=['GET'], endpoint='profile')
 @token_required
 def profile(current_user):
@@ -171,9 +172,35 @@ def profile(current_user):
     print(user)
     return render_template('auth/profile.html', user=user)
 
-@register.route('/userprofile', methods=['GET'])
+# client suppliers or employess
+@register.route('/userprofile', methods=['GET'] , endpoint='userprofile')
 @token_required
 def userprofile(current_user):
     user = list(mongo.db.users.find({'email': current_user}))
     print(user)
     return render_template('auth/nprofile.html', user=user)
+
+@register.route('/profile/update/<user_id>', methods=['POST'],endpoint='update_profile')
+@token_required
+def profile_update(current_user , user_id):
+    print(request.form)
+    full_name = request.form.get('full_name')
+    mobile = request.form.get('mobile')
+    city = request.form.get('city')
+    area = request.form.get('area')
+    address = request.form.get('address')
+
+    mongo.db.products.update_one(
+        {'email': current_user},
+        {
+            '$set': {
+                'full_name': full_name,
+                'mobile': mobile,
+                'city': city,
+                'area': area,
+                'address': address,
+            }
+        }
+    )
+
+    return redirect('/register/profile')
