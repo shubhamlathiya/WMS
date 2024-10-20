@@ -39,8 +39,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <form method="post" action="/register/profile/update/{{ user[0]._id }}">
+                    <form method="post" action="/register/profile/update/{{ user[0]._id }}">
+                        <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>First Name</label>
@@ -64,31 +64,32 @@
                                            disabled onkeypress="return validateEmailInput(event)">
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City</label>
                                     <input type="text" id="city" name="city" value="{{ user[0].city }}" required
                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32">
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Area</label>
                                     <input type="text" id="area" name="area" value="{{ user[0].area }}" required>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Address</label>
-                                    <input type="text" id="address" name="address" value="{{ user[0].address }}" required>
+                                    <input type="text" id="address" name="address" value="{{ user[0].address }}"
+                                           required>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button type="submit" href="javascript:void(0);" class="btn btn-submit me-2">Submit
                                 </button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
