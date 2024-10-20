@@ -107,9 +107,9 @@ def submit_order(current_user):
 
         # Handle payment processing
         if payment_type == 'Cash':
-            transaction_status = 'pending'
+            transaction_status = 'Pending'
         else:
-            transaction_status = 'completed'
+            transaction_status = 'Paid'
 
         transaction = {
             'order_id': ObjectId(str(order_new.inserted_id)),  # Convert ObjectId to string

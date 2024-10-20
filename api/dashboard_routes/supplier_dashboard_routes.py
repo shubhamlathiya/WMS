@@ -219,10 +219,9 @@ def pickup_multiple_orders(current_user):
 @token_required
 def deliver_order(current_user, order_id):
     try:
-        print("deliver" , order_id)
+        print("deliver", order_id)
         otp_entered = request.form.get('otp')
         cash_collected = request.form.get('cash_collected')  # For COD orders
-
 
         # Fetch the order from the database
         order = mongo.db.orders.find_one({'_id': ObjectId(order_id)})
@@ -231,7 +230,6 @@ def deliver_order(current_user, order_id):
         if otp_entered != str(order['otp']):
             return jsonify({'status': 'error', 'message': 'Invalid OTP'}), 400
 
-
         # If the order is COD, ensure cash is collected
         if order['payment_type'] == 'Cash' and not cash_collected:
             return jsonify({'status': 'error', 'message': 'Cash not collected for COD order'}), 400
@@ -239,7 +237,6 @@ def deliver_order(current_user, order_id):
         # Mark the order as delivered
         # mongo.db.orders.update_one({'_id': ObjectId(order_id)},
         #                            {"$set": {'status': 'Delivered', 'delivery_date': datetime.now()}})
-
 
         mongo.db.orders.update_one(
             {'_id': ObjectId(order_id)},
@@ -251,7 +248,6 @@ def deliver_order(current_user, order_id):
             }}
         )
 
-
         mongo.db.assigned_tasks.update_one(
             {'order_id': ObjectId(order_id)},
             {
@@ -260,8 +256,6 @@ def deliver_order(current_user, order_id):
                 }
             }
         )
-
-
 
         # Insert cash collection record for WMS manager if COD
         if order['payment_type'] == 'Cash':
@@ -272,6 +266,16 @@ def deliver_order(current_user, order_id):
                 'submission_date': datetime.now()
             }
             mongo.db.cash_collections.insert_one(cash_entry)
+
+            mongo.db.transactions.update_one(
+                {'order_id': ObjectId(order_id)},
+                {
+                    '$set': {
+                        'status': 'Paid',
+                        'transaction_date': datetime.now()  # Update the current status
+                    }
+                }
+            )
 
         # print("cash")
 

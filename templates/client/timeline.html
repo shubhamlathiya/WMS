@@ -18,7 +18,7 @@
 
 <div class="main-wrapper">
 
-<div class="header">
+    <div class="header">
 
         <div class="header-left border-0 ">
             <a href="index.html" class="logo">
@@ -197,8 +197,9 @@
                             </svg>
                             Settings</a>
                         <hr class="m-0">
-                        <a class="dropdown-item logout pb-0" href="signin.html"><img src="/static/assets/img/icons/log-out.svg"
-                                                                                     class="me-2" alt="img">Logout</a>
+                        <a class="dropdown-item logout pb-0" href="signin.html"><img
+                                src="/static/assets/img/icons/log-out.svg"
+                                class="me-2" alt="img">Logout</a>
                     </div>
                 </div>
             </li>
@@ -225,7 +226,7 @@
                     <div class="col-sm-12">
                         <h3 class="page-title">Timeline</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/client/dashboard">Dashboard</a></li>
                             <li class="breadcrumb-item active">Timeline</li>
                         </ul>
                     </div>
@@ -238,106 +239,46 @@
                     <div class="card">
                         <div class="card-body">
                             <ul class="timeline">
-                                <li>
-                                    <div class="timeline-badge success">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Title</h4>
+                                {% for status_item in timeline %}
+                                    <li {% if loop.index is odd %} class="timeline-inverted" {% endif %}>
+                                        <div class="timeline-badge
+        {% if status_item.status == 'Submitted' %}
+            info
+        {% elif status_item.status == 'Assigned' %}
+            primary
+        {% elif status_item.status == 'Shipment Ready' %}
+            warning
+        {% elif status_item.status == 'Out for Delivery' %}
+            success
+        {% elif status_item.status == 'Delivered' %}
+            danger
+        {% endif %}
+        ">
+                                            <i class="fas fa-check"></i>
                                         </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero
-                                                laboriosam
-                                                dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est
-                                                cum veniam excepturi. Maiores praesentium, porro voluptas suscipit
-                                                facere
-                                                rem dicta, debitis.</p>
+                                        <div class="timeline-panel">
+                                            <div class="timeline-heading">
+                                                <h4 class="timeline-title">{{ status_item.status }}</h4>
+                                            </div>
+                                            <div class="timeline-body">
+                                                <p>
+                                                    {% if status_item.timestamp %}
+                                                        Status updated at:
+                                                        {{ status_item.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                                                    {% elif status_item.updated_at %}
+                                                        Status updated at:
+                                                        {{ status_item.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                                    {% elif status_item.delivery_date %}
+                                                        Delivered at:
+                                                        {{ status_item.delivery_date.strftime('%Y-%m-%d %H:%M:%S') }}
+                                                    {% endif %}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-badge warning">
-                                        <i class="fas fa-users"></i></div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Title </h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium
-                                                maiores
-                                                odit qui est tempora eos, nostrum provident explicabo dignissimos
-                                                debitis
-                                                vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="timeline-badge danger">
-                                        <i class="fas fa-gift"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus
-                                                numquam
-                                                facilis enim eaque, tenetur nam id qui vel velit similique nihil iure
-                                                molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est
-                                                quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias
-                                                sapiente
-                                                rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut
-                                                debitis!</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="timeline-badge info">
-                                        <i class="fa fa-save"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus
-                                                modi
-                                                quam ipsum alias at est molestiae excepturi delectus nesciunt,
-                                                quibusdam</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-badge success">
-                                        <i class="fa fa-graduation-cap"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt
-                                                obcaecati,
-                                                quaerat tempore officia voluptas debitis consectetur culpa amet,
-                                                accusamus
-                                                dolorum fugiat, animi dicta aperiam, enim incidunt quisquam maxime neque
-                                                eaque.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                {% endfor %}
                             </ul>
+
                         </div>
                     </div>
                 </div>
