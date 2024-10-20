@@ -48,6 +48,13 @@ def order_products(current_user):
 def submit_order(current_user):
     try:
         # Parse order details
+        userdata = mongo.db.users.find_one({'email':current_user})
+        print(userdata)
+        if userdata['city'] is None and userdata['area'] is None and userdata['address'] is None:
+            return jsonify(
+                {'status': 'error', 'message': 'please update your profile in area'}
+            )
+
         order_details = request.json  # Expecting JSON data
         total_amount = float(order_details['totalAmount'])  # Parse the total amount
         payment_type = order_details['paymentType']  # Payment type (Cash, Razorpay, etc.)

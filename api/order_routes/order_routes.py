@@ -46,7 +46,7 @@ def get_orders():
                 'order_id': str(order['_id']),
                 'user': user_details,
                 'total_amount': order['total_amount'],
-                'status': order['status'],
+                'status': order.get('status', [])[-1]['status'] if order.get('status', []) else '',
                 'order_date': order['order_date'].strftime('%Y-%m-%d'),
                 'transaction': transaction_details,
                 'products': []  # List of products in the order
