@@ -164,9 +164,16 @@ def verify_otp():
 
     return render_template('auth/otp.html')
 
-@register.route('/profile', methods=['GET'])
+@register.route('/profile', methods=['GET'], endpoint='profile')
 @token_required
 def profile(current_user):
     user = list(mongo.db.users.find({'email': current_user}))
     print(user)
     return render_template('auth/profile.html', user=user)
+
+@register.route('/userprofile', methods=['GET'])
+@token_required
+def userprofile(current_user):
+    user = list(mongo.db.users.find({'email': current_user}))
+    print(user)
+    return render_template('auth/nprofile.html', user=user)
