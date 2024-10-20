@@ -22,7 +22,7 @@ def get_supplier_orders(current_user):
         # Fetch assigned tasks for the supplier
         assigned_tasks = list(mongo.db.assigned_tasks.find({
             'supplier_id': ObjectId(session['user_id']),
-        }))
+        }).sort('assigned_date', -1))
 
         if not assigned_tasks:
             error = "No orders assigned to this supplier."
