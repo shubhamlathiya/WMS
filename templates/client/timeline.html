@@ -23,23 +23,25 @@
 
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body align-center">
                             <ul class="timeline">
                                 {% for status_item in timeline %}
                                     <li {% if loop.index is odd %} class="timeline-inverted" {% endif %}>
                                         <div class="timeline-badge
-        {% if status_item.status == 'Submitted' %}
-            info
-        {% elif status_item.status == 'Assigned' %}
-            primary
-        {% elif status_item.status == 'Shipment Ready' %}
-            warning
-        {% elif status_item.status == 'Out for Delivery' %}
-            success
-        {% elif status_item.status == 'Delivered' %}
-            danger
-        {% endif %}
-        ">
+                                            {% if status_item.status == 'Submitted' %}
+                                                success
+                                            {% elif status_item.status == 'Assigned' %}
+                                                primary
+                                            {% elif status_item.status == 'Shipment Ready' %}
+                                                bg-dark
+                                            {% elif status_item.status == 'Assigned to Supplier' %}
+                                                danger
+                                            {% elif status_item.status == 'Out for Delivery' %}
+                                                info
+                                            {% elif status_item.status == 'Delivered' %}
+                                                bg-success
+                                            {% endif %}
+                                            ">
                                             <i class="fas fa-check"></i>
                                         </div>
                                         <div class="timeline-panel">

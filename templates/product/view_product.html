@@ -35,6 +35,7 @@
                             <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Product Image</th>
                                 <th>Product Name</th>
                                 <th>SKU</th>
                                 <th>Price</th>
@@ -49,6 +50,7 @@
                             {% for products_list in products_list %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
+                                    <td><img src="/{{ products_list.image }}" alt="img"></td>
                                     <td>{{ products_list.product_name }}</td>
                                     <td>{{ products_list.sku }}</td>
                                     <td>{{ products_list.price }}</td>
@@ -64,9 +66,9 @@
                                         <a class="me-3" href="/product/updateproduct/{{ products_list.sku }}">
                                             <img src="/static/assets/img/icons/edit.svg" alt="img">
                                         </a>
-                                        <a class="confirm-text" href="javascript:void(0);">
-                                            <img src="/static/assets/img/icons/delete.svg" alt="img">
-                                        </a>
+{#                                        <a class="confirm-text" href="javascript:void(0);">#}
+{#                                            <img src="/static/assets/img/icons/delete.svg" alt="img">#}
+{#                                        </a>#}
                                     </td>
                                 </tr>
                             {% endfor %}
