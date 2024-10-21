@@ -24,12 +24,13 @@ def add_area(current_user):
         print(current_user)
         name = request.form.get('areaName')
         no_box = request.form.get('boxNo')
-        # print(name)
-        found = mongo.db.areas.find({'area_name': name})
-        if found:
-            # error = 'Area already exists'
-            # return redirect('product/area.html', error=error)
-            return jsonify({'message': 'area already exists'}), 400
+        print(name)
+        found = mongo.db.areas.find_one({'area_name': name})
+        # print(list(found))
+        # if found:
+        #     # error = 'Area already exists'
+        #     # return redirect('product/area.html', error=error)
+        #     return jsonify({'message': 'area already exists'}), 400
 
         area_record = {
             "area_name": name,

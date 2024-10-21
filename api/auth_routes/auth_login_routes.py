@@ -9,6 +9,7 @@ from config import mongo
 
 login = Blueprint('login', __name__)
 
+
 @login.route('/', methods=['POST'])
 def login_user():
     data = request.get_json()
@@ -29,7 +30,7 @@ def login_user():
             session['user_id'] = str(user['_id'])
             session['email'] = user['email']
             session['role'] = user['role']
-            session['name']= user['full_name']
+            session['name'] = user['full_name']
             # print(session['name'])
             # Determine the redirection URL based on user role
             if user['role'] == 'client':
@@ -47,6 +48,6 @@ def login_user():
 
             return jsonify({'token': token, 'redirect_url': redirect_url})
         else:
-            return jsonify({'message': 'Your are deActive.'}), 400
+            return jsonify({'message': 'Your are DeActive. Please contact Admin'}), 400
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
