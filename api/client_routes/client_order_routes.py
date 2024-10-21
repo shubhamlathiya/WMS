@@ -10,6 +10,7 @@ from api.client_routes.client_dashboard_routes import client
 
 from . import client
 
+
 # client add
 @client.route('/dashboard', methods=['GET'], endpoint='orderProducts')
 @token_required
@@ -32,7 +33,7 @@ def order_products(current_user):
             product_list.append({
                 'image': product['image'],
                 'name': product['product_name'],
-                'unit':product['unit'],
+                'unit': product['unit'],
                 'sku': product['sku'],
                 'price': product['price'],
                 'stock_qty': stock_qty
@@ -43,12 +44,13 @@ def order_products(current_user):
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+
 @client.route('/submitOrder', methods=['POST'], endpoint='submitOrder')
 @token_required
 def submit_order(current_user):
     try:
         # Parse order details
-        userdata = mongo.db.users.find_one({'email':current_user})
+        userdata = mongo.db.users.find_one({'email': current_user})
         print(userdata)
         if userdata['city'] is None and userdata['area'] is None and userdata['address'] is None:
             return jsonify(
@@ -144,12 +146,12 @@ def submit_order(current_user):
         send_order_confirmation_email(client_email, order, ordered_products)
 
         return jsonify(
-            {'status': 'success', 'message': 'Order placed and assigned successfully', 'order_id': str(order_new.inserted_id),
+            {'status': 'success', 'message': 'Order placed and assigned successfully',
+             'order_id': str(order_new.inserted_id),
              'url': "/client/dashboard"}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 
 def assign_order_to_employee(order_id):
@@ -192,6 +194,7 @@ def assign_order_to_employee(order_id):
 
     return assigned_employee
 
+
 def send_order_confirmation_email(email, order, products):
     try:
         product_details = "\n".join(
@@ -199,24 +202,105 @@ def send_order_confirmation_email(email, order, products):
         )
 
         msg_body = f"""
-        Hello,
+            <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+        </head>
+        <body style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;">
+        <div style="max-width: 680px;margin: 0 auto;padding: 45px 30px 60px;background: #f4f7ff;
+                background-image: url(https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661497957196_595865/email-template-background-banner);
+                background-repeat: no-repeat;background-size: 800px 452px;background-position: top center;font-size: 14px;color: #434343;">
+            <header>
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr style="height: 0;">
+                        <td>
+                            <h1>WMS</h1>
+                        </td>
+                        <td style="text-align: right;">
+                            <span style="font-size: 16px; line-height: 30px; color: #ffffff;">Warehouse Management System</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </header>
 
-        Thank you for your order!
+            <main>
+                <div style="margin: 0;margin-top: 70px;padding: 92px 30px 115px;background: #ffffff;border-radius: 30px;text-align: center;">
+                    <div style="width: 100%; max-width: 489px; margin: 0 auto;">
+                        <h1 style="margin: 0;font-size: 24px;font-weight: 500;color: #1f1f1f;">Order Details</h1>
+                        <p style="margin: 0;margin-top: 17px;font-size: 16px;font-weight: 500;">
+                            Hi Dear,
+                        </p>
+                        <p style="margin: 0;margin-top: 17px;font-weight: 500;letter-spacing: 0.56px;">
+                            Thank you for your order!<br/>
+                            
+                            <b>Products:</b> {product_details}<br/><br/>
+                            <b>Total Amount:</b> {order['total_amount']}<br/>
+                            <b>Payment Type:</b> {order['payment_type']}<br/>
+                            <b>Order Date:</b> {order['order_date'].strftime('%Y-%m-%d')}
+                        </p>
+                    </div>
+                </div>
 
-        Order Details:
-        Order ID: {str(order['_id'])}
-        Total Amount: {order['total_amount']}
-        Payment Type: {order['payment_type']}
-        Order Date: {order['order_date'].strftime('%Y-%m-%d')}
+                <p style="max-width: 400px; margin: 0 auto;margin-top: 90px;text-align: center;font-weight: 500;color: #8c8c8c;">
+                    Need help? Ask at
+                    <a href="mailto:wms@gmail.com" style="color: #499fb6; text-decoration: none;">wms@gmail.com</a>
+                </p>
+            </main>
 
-        Products:
-        {product_details}
-
-        Regards,
-        Your Company Name
+            <footer style="width: 100%;max-width: 490px;margin: 20px auto 0;text-align: center;border-top: 1px solid #e6ebf1;">
+                <p style="margin: 0;margin-top: 40px;font-size: 16px;font-weight: 600;color: #434343;">
+                    Warehouse Management System
+                </p>
+                <p style="margin: 0; margin-top: 8px; color: #434343;"></p>
+                <div style="margin: 0; margin-top: 16px;">
+                    <a href="" target="_blank" style="display: inline-block;">
+                        <img width="36px" alt="Facebook"
+                             src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661502815169_682499/email-template-icon-facebook"/>
+                    </a>
+                    <a href="" target="_blank" style="display: inline-block; margin-left: 8px;">
+                        <img width="36px" alt="Instagram"
+                             src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661504218208_684135/email-template-icon-instagram"/>
+                    </a>
+                    <a href="" target="_blank" style="display: inline-block; margin-left: 8px;">
+                        <img width="36px" alt="Twitter"
+                             src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503043040_372004/email-template-icon-twitter"/>
+                    </a>
+                    <a href="" target="_blank" style="display: inline-block; margin-left: 8px;">
+                        <img width="36px" alt="Youtube"
+                             src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503195931_210869/email-template-icon-youtube"/>
+                    </a>
+                </div>
+                <p style="margin: 0; margin-top: 16px; color: #434343;">
+                    Copyright © 2024 WMS. All rights reserved.
+                </p>
+            </footer>
+        </div>
+        </body>
+        </html>
         """
 
-        subject="Order Confirmation"
+        # msg_body = f"""
+        # Hello,
+        #
+        # Thank you for your order!
+        #
+        # Order Details:
+        # Order ID: {str(order['_id'])}
+        # Total Amount: {order['total_amount']}
+        # Payment Type: {order['payment_type']}
+        # Order Date: {order['order_date'].strftime('%Y-%m-%d')}
+        #
+        # Products:
+        # {product_details}
+        #
+        # Regards,
+        # Your Company Name
+        # """
+
+        subject = "Order Confirmation"
 
         send_email(subject, email, msg_body)
 

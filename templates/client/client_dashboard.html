@@ -18,21 +18,17 @@
                         <div class="tab_content active" data-tab="Accessories">
                             <div class="row">
                                 {% for product in products %}
-                                    <div class="col-lg-3 col-sm-6 d-flex ">
+                                    <div class="col-lg-3 col-sm-6 d-flex">
                                         <div class="productset flex-fill">
                                             <div class="productsetimg">
                                                 <img src="/{{ product.image }}" alt="img">
                                                 <h6>Qty: {{ product.stock_qty }}</h6>
-                                                {#                                                <div class="check-product">#}
-                                                {#                                                    <i class="fa fa-check"></i>#}
-                                                {#                                                </div>#}
                                             </div>
                                             <div class="productsetcontent">
-                                                {#                                            <h5>Accessories</h5>#}
                                                 <h4>{{ product.name }}</h4>
-                                                <h6>{{ product.price }}</h6>
+                                                <h5>Unit : {{ product.unit }}</h5>
+                                                <h6>₹ {{ product.price }}</h6>
                                                 <br/>
-                                                {#                                                <button class="btn btn-success">#}
                                                 {% if product.stock_qty > 0 %}
                                                     <button type="button" class="btn btn-success"
                                                             onclick="addToOrder('{{ product.sku }}', '{{ product.name }}', {{ product.price }}, {{ product.stock_qty }},'{{ product.image }}')">
@@ -41,7 +37,6 @@
                                                 {% else %}
                                                     <button class="btn btn-danger">Out of Stock</button>
                                                 {% endif %}
-                                                {#                                                </button>#}
                                             </div>
                                         </div>
                                     </div>
