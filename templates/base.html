@@ -159,7 +159,7 @@
 
     </div>
 
-    {% if session['role'] == 'admin' and session['role'] == 'manager' %}
+    {% if session['role'] == 'admin' or session['role'] == 'manager' %}
         {# Sidebar #}
         <div class="sidebar" id="sidebar">
             <div class="sidebar-inner slimscroll">

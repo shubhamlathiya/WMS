@@ -277,7 +277,7 @@ def deliver_order(current_user, order_id):
                 }
             )
 
-        # print("cash")
+        print("cash")
 
         return redirect('/supplier/dashboard')
 

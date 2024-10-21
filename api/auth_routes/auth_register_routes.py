@@ -173,13 +173,6 @@ def profile(current_user):
     return render_template('auth/profile.html', user=user)
 
 # client suppliers or employess
-@register.route('/userprofile', methods=['GET'] , endpoint='userprofile')
-@token_required
-def userprofile(current_user):
-    user = list(mongo.db.users.find({'email': current_user}))
-    print(user)
-    return render_template('auth/nprofile.html', user=user)
-
 @register.route('/profile/update/<user_id>', methods=['POST'],endpoint='update_profile')
 @token_required
 def profile_update(current_user , user_id):
@@ -190,7 +183,7 @@ def profile_update(current_user , user_id):
     area = request.form.get('area')
     address = request.form.get('address')
 
-    mongo.db.products.update_one(
+    mongo.db.users.update_one(
         {'email': current_user},
         {
             '$set': {

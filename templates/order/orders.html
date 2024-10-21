@@ -1,28 +1,29 @@
-{% extends 'base.html' %} {% block title %}View Orders{% endblock title %} {% block sidebaro %}active{% endblock sidebaro %} {% block body %}
+{% extends 'base.html' %} {% block title %}View Orders{% endblock title %} {% block sidebaro %}
+    active{% endblock sidebaro %} {% block body %}
 
-<div class="page-wrapper">
-    <div class="content">
-        <div class="page-header">
-            <div class="page-title">
-                <h4>Order List</h4>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Order List</h4>
+                </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="table-top">
-                    <div class="search-set">
-                        <div class="search-input">
-                            <a class="btn btn-searchset">
-                                <img src="/static/assets/img/icons/search-white.svg" alt="img">
-                            </a>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-top">
+                        <div class="search-set">
+                            <div class="search-input">
+                                <a class="btn btn-searchset">
+                                    <img src="/static/assets/img/icons/search-white.svg" alt="img">
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="table-responsive">
-                    <table class="table datanew">
-                        <thead>
+                    <div class="table-responsive">
+                        <table class="table datanew">
+                            <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Name</th>
@@ -35,41 +36,50 @@
                                 <th>Payment Type</th>
                                 <th>Status</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for orders_list in orders_list %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ orders_list.user.name }}</td>
-                                <td>{{ orders_list.user.phone }}</td>
-                                <td>{{ orders_list.order_date }}</td>
-                                <td>{{ orders_list.products[0].product_name }}</td>
-                                <td>{{ orders_list.products[0].quantity }}</td>
-                                <td>{{ orders_list.total_amount }}</td>
-                                {% if orders_list.transaction.payment_status == 'pending' %}
-                                <td><span class="badges bg-lightred">{{ orders_list.transaction.payment_status }}</span></td>
-                                {% else %}
-                                <td><span class="badges bg-lightgreen">{{ orders_list.transaction.payment_status }}</span></td>
-                                {% endif %}
-                                <td>{{ orders_list.transaction.payment_method }}</td>
-                                <td>{{ orders_list.status }}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ orders_list.user.name }}</td>
+                                    <td>{{ orders_list.user.phone }}</td>
+                                    <td>{{ orders_list.order_date }}</td>
+                                    <td>{{ orders_list.products[0].product_name }}</td>
+                                    <td>{{ orders_list.products[0].quantity }}</td>
+                                    <td>{{ orders_list.total_amount }}</td>
+                                    {% if orders_list.transaction.payment_status == 'Pending' %}
+                                        <td><span
+                                                class="badges bg-lightred">{{ orders_list.transaction.payment_status }}</span>
+                                        </td>
+                                    {% else %}
+                                        <td><span
+                                                class="badges bg-lightgreen">{{ orders_list.transaction.payment_status }}</span>
+                                        </td>
+                                    {% endif %}
+                                    <td>{{ orders_list.transaction.payment_method }}</td>
+                                    {% if orders_list.status != 'Delivered' %}
+                                        <td><span class="badges bg-lightred">{{ orders_list.status }}</span></td>
+                                    {% else %}
+                                        <td><span class="badges bg-lightgreen">{{ orders_list.status }}</span></td>
+                                    {% endif %}
+                                    {#                                <td>{{ orders_list.status }}</td>#}
+                                </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    function toggleStatus(userId, isChecked) {
-        // Prepare the data to send
-        const status = isChecked ? 'true' : 'false';
+    <script>
+        function toggleStatus(userId, isChecked) {
+            // Prepare the data to send
+            const status = isChecked ? 'true' : 'false';
 
-        // Send an AJAX POST request to the Flask route
-        fetch('/user/user_status', {
+            // Send an AJAX POST request to the Flask route
+            fetch('/user/user_status', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,17 +89,17 @@
                     status: status
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Status updated successfully!');
-                } else {
-                    alert('Error updating status.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-</script>
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Status updated successfully!');
+                    } else {
+                        alert('Error updating status.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 {% endblock body %} {##} {#
 <!DOCTYPE html>#} {#
 <html lang="en">#} {#
@@ -253,14 +263,14 @@
     <script>
         #} {#
             $(document).ready(function() {#} {# // Fetch all orders when the page loads#}
-                        {#
+{#
                             $.get('/order/getorders', function(response) {#} {#
                                         if (response.status === 'success') {#} {#
                                             let orders = response.orders;#
                                         } {#
                                             let ordersHtml = '';#
                                         } {##} {# // Iterate through each order_routes and create the table rows#}
-                                            {#
+{#
                                                 orders.forEach(function(order) {#} {#
                                                         ordersHtml += `#}
 {#                    <tr>#}
@@ -285,7 +295,7 @@
 {#                                <tbody>#}
 {#                    `;#
                                                     } {##} {# // Append the products ordered for each order_routes#}
-                                                        {#
+{#
                                                             order.products.forEach(function(product) {#} {#
                                                                 ordersHtml += `#}
 {#                        <tr>#}
@@ -295,29 +305,29 @@
 {#                            <td>$${product.amount}</td>#}
 {#                        </tr>`;#
                                                             } {#});#
-                                                        } {##} {#
+} {##} {#
                                                             ordersHtml += `#}
 {#                                </tbody>#}
 {#                            </table>#}
 {#                        </td>#}
 {#                    </tr>`;#
                                                         } {#});#
-                                                } {##} {# // Add the orders HTML to the orders table body#}
-                                                    {#
+} {##} {# // Add the orders HTML to the orders table body#}
+{#
                                                         $('#orders-table tbody').html(ordersHtml);#
                                                     } {#} else {#} {#
                                                         $('#orders-table tbody').html('<tr><td colspan="6">Error loading orders</td></tr>');#
                                                     } {#}#
-                                                } {#});#
-                                        } {##} {# // Show/Hide products on clicking the "eye" icon#}
-                                            {#
+} {#});#
+} {##} {# // Show/Hide products on clicking the "eye" icon#}
+{#
                                                 $(document).on('click', '.eye-icon', function() {#} {#
                                                         let orderId = $(this).data('order_routes-id');#
                                                     } {#
                                                         $(`#products-${orderId}`).toggle(); // Toggle the product table display#}
-                                                        {#});#
-                                                } {#});#
-                                        } {#
+{#});#
+} {#});#
+} {#
     </script>#} {##} {#
 </body>#} {#
 

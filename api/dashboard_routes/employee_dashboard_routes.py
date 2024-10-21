@@ -104,7 +104,7 @@ def dashboard_home(current_user):
             },
             {
                 '$sort': {
-                    'assigned_date': -1  # Sort by assigned_date in descending order
+                    'assigned_date': -1
                 }
             },
             {
