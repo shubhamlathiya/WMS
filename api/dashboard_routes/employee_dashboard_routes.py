@@ -1,6 +1,8 @@
+# from crypt import methods
 from datetime import datetime
+# from email.policy import default
 
-from flask import Flask, request, jsonify, render_template, Blueprint , session
+from flask import Flask, request, jsonify, render_template, Blueprint, session
 from middleware.auth_middleware import token_required
 from middleware.page_visibility_middleware import role_required
 
@@ -10,15 +12,21 @@ from bson.objectid import ObjectId
 employee = Blueprint('employee', __name__)
 
 
-@employee.route('/dashboard', methods=['GET'])
+@employee.route('/dashboard', methods=['GET'], endpoint='employee_dashboard')
+@employee.route('/dashboard/<employee_id>', methods=['GET'], endpoint='employee_dashboard_with_id')
 @token_required
 @role_required('employee_dashboard', 'view')
-def dashboard_home(current_user):
+def dashboard(current_user, employee_id=None):
     try:
+        if employee_id:
+            userid = employee_id
+        else:
+            userid = session['user_id']
+
         assigned_tasks = list(mongo.db.assigned_tasks.aggregate([
             {
                 '$match': {
-                    'employee_id': ObjectId(session['user_id']),  # Match the employee_id
+                    'employee_id': ObjectId(userid),  # Match the employee_id
                 }
             },
             {
@@ -130,7 +138,6 @@ def dashboard_home(current_user):
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
     # return render_template('dashboard/employee_dashboard.html')
 
 
@@ -217,4 +224,3 @@ def update_order_status(current_user, order_id):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-

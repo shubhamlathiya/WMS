@@ -66,13 +66,17 @@
                                             <input type="checkbox" id="user{{ loop.index }}" name="user{{ loop.index }}"
                                                    class="check"
                                                    {% if users_list.status == 'true' %}checked{% endif %}
-                                             onchange="toggleStatus('{{ users_list._id }}', this.checked)">
+                                                   onchange="toggleStatus('{{ users_list._id }}', this.checked)">
                                             <label for="user{{ loop.index }}" class="checktoggle">checkbox</label>
                                         </div>
                                     </td>
                                     <td>
                                         <a class="me-3" href="/user/updateuser/{{ users_list._id }}">
                                             <img src="/static/assets/img/icons/edit.svg" alt="img">
+                                        </a>
+
+                                        <a class="me-3" href="/employee/dashboard/{{ users_list._id }}">
+                                            <img src="/static/assets/img/icons/eye.svg" alt="img">
                                         </a>
                                     </td>
                                 </tr>
@@ -86,28 +90,28 @@
     </div>
 
 
-<script>
-    function toggleStatus(userId, isChecked) {
-        // Prepare the data to send
-        const status = isChecked ? 'true' : 'false';
+    <script>
+        function toggleStatus(userId, isChecked) {
+            // Prepare the data to send
+            const status = isChecked ? 'true' : 'false';
 
-        // Send an AJAX POST request to the Flask route
-        fetch('/user/user_status', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({user_id: userId, status: status})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Status updated successfully!');
-            } else {
-                alert('Error updating status.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script>
+            // Send an AJAX POST request to the Flask route
+            fetch('/user/user_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({user_id: userId, status: status})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Status updated successfully!');
+                    } else {
+                        alert('Error updating status.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 {% endblock body %}
