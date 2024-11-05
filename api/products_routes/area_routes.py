@@ -89,6 +89,7 @@ def update_area(current_user, area_id):
         return redirect('/area/viewarea')
 
 @area.route('/area_status', methods=['POST'])
+@token_required
 def user_status():
     data = request.get_json()
 

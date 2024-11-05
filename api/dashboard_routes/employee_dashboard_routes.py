@@ -143,6 +143,7 @@ def dashboard(current_user, employee_id=None):
 
 @employee.route('/update/<order_id>', methods=['POST'], endpoint='update')
 @token_required
+@role_required('manager_dashboard', 'update')
 def update_order_status(current_user, order_id):
     try:
         print(f"updated : {order_id}")

@@ -12,7 +12,7 @@ from middleware.page_visibility_middleware import role_required
 user = Blueprint('user', __name__)
 
 
-@user.route('/adduser')
+@user.route('/adduser' ,methods = ['GET'], endpoint='user')
 @token_required
 @role_required('users', 'create')
 def add_user(current_user):
@@ -243,6 +243,7 @@ def update_user(current_user, user_id):
 
 
 @user.route('/user_status', methods=['POST'])
+@token_required
 def user_status():
     data = request.get_json()
 

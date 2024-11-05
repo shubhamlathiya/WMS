@@ -15,7 +15,8 @@ order = Blueprint('order', __name__)
 #     return render_template('order/orders.html')
 
 
-@order.route('/getorders', methods=['GET'])
+@order.route('/getorders', methods=['GET'] , endpoint='getorders')
+@token_required
 def get_orders():
     try:
         # Fetch all orders from the database

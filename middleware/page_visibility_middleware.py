@@ -32,7 +32,8 @@ def role_required(page_name, action):
                     # return jsonify(
                     #     {"message": f"Access Denied: You do not have permission to {action} on {page_name}"}), 403
             else:
-                return jsonify({"message": "Page visibility settings not found"}), 404
+                # return jsonify({"message": "Page visibility settings not found"}), 404
+                return render_template('error_handler/error_404.html' , page_name=page_name)
 
         return decorated_function
 

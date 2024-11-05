@@ -15,7 +15,8 @@
                     <h4>Order Details</h4>
                 </div>
                 <div class="page-btn">
-                    <button type="submit" onclick="submitForm()" class="btn btn-primary">Pick Up Selected Orders</button>
+                    <button type="submit" onclick="submitForm()" class="btn btn-primary">Pick Up Selected Orders
+                    </button>
                 </div>
             </div>
 
@@ -37,7 +38,7 @@
                                 <thead>
                                 <tr>
                                     <th>Select</th>
-{#                                    <th>Order ID</th>#}
+                                    {#                                    <th>Order ID</th>#}
                                     <th>Products</th>
                                     <th>Total Amount</th>
                                     <th>Payment Type</th>
@@ -57,7 +58,7 @@
                                                 <input type="checkbox" name="order_ids" value="{{ order.order_id }}">
                                             {% endif %}
                                         </td>
-{#                                        <td>{{ order.order_id }}</td>#}
+                                        {#                                        <td>{{ order.order_id }}</td>#}
                                         <td>
                                             <ul>
                                                 {% for product in order.products %}

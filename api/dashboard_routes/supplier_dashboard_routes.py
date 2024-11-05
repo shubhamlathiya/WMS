@@ -14,14 +14,20 @@ supplier = Blueprint('supplier', __name__)
 
 
 @supplier.route('/dashboard', methods=['GET'], endpoint='supplier_orders')
+@supplier.route('/dashboard/<supplier_id>', methods=['GET'], endpoint='supplier_dashboard_with_id')
 @token_required
-def get_supplier_orders(current_user):
+@role_required('manager_dashboard', 'view')
+def get_supplier_orders(current_user, supplier_id=None):
     try:
         # print(f"Fetching orders for supplier: {session['user_id']}")
+        if supplier_id:
+            userid = supplier_id
+        else:
+            userid = session['user_id']
 
         # Fetch assigned tasks for the supplier
         assigned_tasks = list(mongo.db.assigned_tasks.find({
-            'supplier_id': ObjectId(session['user_id']),
+            'supplier_id': ObjectId(userid),
         }).sort('assigned_date', -1))
 
         if not assigned_tasks:
@@ -68,6 +74,7 @@ def get_supplier_orders(current_user):
 
         # return jsonify({'status': 'success', 'orders': orders_details}), 200
         return render_template('dashboard/supplier_dashboard.html', orders_details=orders_details)
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -209,7 +216,8 @@ def pickup_multiple_orders(current_user):
             send_email(subject, client['email'], body)
 
         # return redirect('/supplier/dashboard')
-        return jsonify({'status': 'success', 'message': 'Orders picked up and OTP sent to customers.', 'url': "/supplier/dashboard"}), 200
+        return jsonify({'status': 'success', 'message': 'Orders picked up and OTP sent to customers.',
+                        'url': "/supplier/dashboard"}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
