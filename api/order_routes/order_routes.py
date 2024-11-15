@@ -17,11 +17,11 @@ order = Blueprint('order', __name__)
 
 @order.route('/getorders', methods=['GET'] , endpoint='getorders')
 @token_required
-def get_orders():
+def get_orders(current_user):
     try:
         # Fetch all orders from the database
         all_orders = mongo.db.orders.find()
-
+        print("1")
         orders_list = []
         for order in all_orders:
             # Fetch the user details using user_id from the order
@@ -32,7 +32,7 @@ def get_orders():
                 'email': user['email'],
                 'phone': user['mobile']
             }
-
+            print("1")
             # Fetch transaction details using order_id
             transaction = mongo.db.transactions.find_one({'order_id': ObjectId(order['_id'])})
             transaction_details = {
@@ -41,7 +41,7 @@ def get_orders():
                 'payment_status': transaction['payment_status'],
                 'transaction_date': transaction['transaction_date'].strftime('%Y-%m-%d')
             }
-
+            print("1")
             # Create an order dictionary with basic order info, user, and transaction details
             order_dict = {
                 'order_id': str(order['_id']),
@@ -52,7 +52,7 @@ def get_orders():
                 'transaction': transaction_details,
                 'products': []  # List of products in the order
             }
-
+            print("1")
             # Add product details to the order
             for product in order['products']:
                 product_info = {
@@ -64,7 +64,7 @@ def get_orders():
                 order_dict['products'].append(product_info)
 
             orders_list.append(order_dict)
-
+        print("1")
         print(orders_list)
         # Return the order list with user and transaction details
         return render_template("order/orders.html", orders_list=orders_list), 200

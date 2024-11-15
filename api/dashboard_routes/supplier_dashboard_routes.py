@@ -16,7 +16,7 @@ supplier = Blueprint('supplier', __name__)
 @supplier.route('/dashboard', methods=['GET'], endpoint='supplier_orders')
 @supplier.route('/dashboard/<supplier_id>', methods=['GET'], endpoint='supplier_dashboard_with_id')
 @token_required
-@role_required('manager_dashboard', 'view')
+@role_required('supplier_dashboard', 'view')
 def get_supplier_orders(current_user, supplier_id=None):
     try:
         # print(f"Fetching orders for supplier: {session['user_id']}")
