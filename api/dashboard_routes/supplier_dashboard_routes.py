@@ -269,10 +269,14 @@ def deliver_order(current_user, order_id):
         if order['payment_type'] == 'Cash':
             cash_entry = {
                 'order_id': ObjectId(order_id),
-                'collected_by_supplier_id': ObjectId(session['user_id']),
+                'supplier_id': ObjectId(session['user_id']),
                 'amount': int(order['total_amount']),
-                'submission_date': datetime.now()
+                "submission_date": None,
+                'collection_date': datetime.now(),
+                "status": "Collected",
             }
+
+            # status : "Pending," "Collected," or "Submitted"
             mongo.db.cash_collections.insert_one(cash_entry)
 
             mongo.db.transactions.update_one(
@@ -292,16 +296,62 @@ def deliver_order(current_user, order_id):
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+
 #
-# # Route to submit cash to WMS manager
-# @supplier.route('/submit_cash/<cash_id>', methods=['POST'])
-# @token_required
-# @role_required('supplier', 'edit')
-# def submit_cash(current_user, cash_id):
-#     try:
-#         # Mark the cash as submitted to WMS manager
-#         mongo.db.cash_collections.update_one({'_id': ObjectId(cash_id)}, {"$set": {'submission_date': datetime.now()}})
-#         return jsonify({'status': 'success', 'message': 'Cash submitted to WMS manager'}), 200
-#
-#     except Exception as e:
-#         return jsonify({'status': 'error', 'message': str(e)}), 500
+# Route to submit cash to WMS manager
+@supplier.route('/submit_multiple_cash', methods=['POST'], endpoint='submit_multiple_cash')
+@token_required
+def submit_multiple_cash(current_user):
+    try:
+        data = request.get_json()
+        cash_ids = data.get('cash_ids', [])
+
+        if not cash_ids:
+            return jsonify({'status': 'error', 'message': 'No cash orders selected'}), 400
+
+        # Update all selected cash orders with submission date, status, and submitted_by
+        result = mongo.db.cash_collections.update_many(
+            {'_id': {'$in': [ObjectId(cash_id) for cash_id in cash_ids]}},
+            {
+                "$set": {
+                    'submission_date': datetime.now(),
+                    'submitted_by': "manager",  # Assuming "manager" submits the cash
+                    'status': "Submitted"
+                }
+            }
+        )
+
+        if result.modified_count == 0:
+            return jsonify({'status': 'error', 'message': 'Failed to submit cash orders'}), 400
+
+        return jsonify({'status': 'success', 'message': f'Successfully submitted {result.modified_count} cash orders'}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@supplier.route('/codorders/<supplier_id>', methods=['GET'], endpoint='cod_orders')
+@token_required
+def get_cod_orders(current_user, supplier_id):
+    try:
+        # Fetch COD cash collections for the supplier
+        cod_orders = list(mongo.db.cash_collections.find({
+            'supplier_id': ObjectId(supplier_id)
+        }))
+
+        # Transform data for the frontend
+        orders_data = [
+            {
+                'order_id': str(order['order_id']),
+                'total_amount': order.get('amount', 0),
+                'submission_date': order.get('submission_date'),
+                'status': order.get('status', "Pending"),
+                'cash_id': str(order['_id'])
+            }
+            for order in cod_orders
+        ]
+
+        return render_template('order/COD_Orders.html', orders_data=orders_data)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500

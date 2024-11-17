@@ -23,6 +23,7 @@ def dashboard(current_user, employee_id=None):
         else:
             userid = session['user_id']
 
+        print(userid)
         assigned_tasks = list(mongo.db.assigned_tasks.aggregate([
             {
                 '$match': {
@@ -143,7 +144,7 @@ def dashboard(current_user, employee_id=None):
 
 @employee.route('/update/<order_id>', methods=['POST'], endpoint='update')
 @token_required
-@role_required('manager_dashboard', 'update')
+@role_required('employee_dashboard', 'edit')
 def update_order_status(current_user, order_id):
     try:
         print(f"updated : {order_id}")

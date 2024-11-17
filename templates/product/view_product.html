@@ -50,7 +50,7 @@
                             {% for products_list in products_list %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td><img src="/{{ products_list.image }}" alt="img"></td>
+                                    <td><img src="/{{ products_list.image }}" width="40%" height="40%" alt="img"></td>
                                     <td>{{ products_list.product_name }}</td>
                                     <td>{{ products_list.sku }}</td>
                                     <td>{{ products_list.price }}</td>

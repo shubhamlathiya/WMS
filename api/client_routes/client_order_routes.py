@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bson import ObjectId
-from flask import Blueprint, render_template, request, jsonify, redirect, session
+from flask import Blueprint, render_template, request, jsonify, redirect, session, send_file
 from config import mongo
 
 from email_utils import send_email
@@ -152,7 +152,6 @@ def submit_order(current_user):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 def assign_order_to_employee(order_id):
     # Fetch the queue of employees who have role "employee" and status "true"
@@ -308,3 +307,27 @@ def send_order_confirmation_email(email, order, products):
 
     except Exception as e:
         print(f"Failed to send email: {str(e)}")
+
+
+
+@client.route('/download_bill/<order_id>', methods=['GET'], endpoint='download_bill')
+# @token_required
+def download_bill(order_id):
+    try:
+        # Fetch the order details from the database
+        order = mongo.db.orders.find_one({'_id': ObjectId(order_id)})
+        # print(order)
+        if not order:
+            return jsonify({'status': 'error', 'message': 'Order not found'}), 404
+
+        # Ensure 'products' is iterable (a list) before passing to the template
+        # if 'products' not in order or not isinstance(order['products'], list):
+        #     return jsonify({'status': 'error', 'message': 'No products found in the order'}), 400
+
+        # Render the bill template with order data
+        return render_template('order/bill_template.html', order=order)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
