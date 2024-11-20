@@ -58,7 +58,7 @@
                                     {% endif %}
                                     <td>{{ orders_list.transaction.payment_method }}</td>
                                     {% if orders_list.status != 'Delivered' %}
-                                        <td><span class="badges bg-lightred">{{ orders_list.status }}</span></td>
+                                        <td><span class="badges bg-info">{{ orders_list.status }}</span></td>
                                     {% else %}
                                         <td><span class="badges bg-lightgreen">{{ orders_list.status }}</span></td>
                                     {% endif %}
