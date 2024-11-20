@@ -72,8 +72,14 @@ def get_supplier_orders(current_user, supplier_id=None):
                 }
                 orders_details.append(order_detail)
 
+        if supplier_id:
+            return render_template('dashboard/view_delivery.html', orders_details=orders_details)
+        else:
+            return render_template('dashboard/supplier_dashboard.html', orders_details=orders_details)
+
         # return jsonify({'status': 'success', 'orders': orders_details}), 200
-        return render_template('dashboard/supplier_dashboard.html', orders_details=orders_details)
+
+
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
