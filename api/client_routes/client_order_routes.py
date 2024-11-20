@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import razorpay
 from bson import ObjectId
 from flask import Blueprint, render_template, request, jsonify, redirect, session, send_file
 from config import mongo
@@ -9,6 +10,8 @@ from middleware.auth_middleware import token_required
 from api.client_routes.client_dashboard_routes import client
 
 from . import client
+
+razorpay_client = razorpay.Client(auth=("rzp_test_51mQEdclvr946E", "SJWkJRepFPjAMUFRaNwqWR0p"))
 
 
 # client add
@@ -40,6 +43,31 @@ def order_products(current_user):
             })
         print(product_list)
         return render_template("client/client_dashboard.html", products=product_list)
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@client.route('/createRazorpayOrder', methods=['POST'], endpoint='createRazorpayOrder')
+@token_required
+def create_razorpay_order(current_user):
+    try:
+        order_details = request.json
+        total_amount = order_details['totalAmount'] * 100  # Convert to paise (1 INR = 100 paise)
+
+        print(type(total_amount))
+        # Create the Razorpay order
+        razorpay_order = razorpay_client.order.create(dict(
+            amount=total_amount,  # Amount in paise
+            currency='INR',
+            payment_capture='1',  # Auto-capture payment after payment completion
+        ))
+
+        return jsonify({
+            'status': 'success',
+            'razorpay_order_id': razorpay_order['id'],
+            'amount': total_amount / 100  # Amount in INR
+        }), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -152,6 +180,7 @@ def submit_order(current_user):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 def assign_order_to_employee(order_id):
     # Fetch the queue of employees who have role "employee" and status "true"
@@ -309,7 +338,6 @@ def send_order_confirmation_email(email, order, products):
         print(f"Failed to send email: {str(e)}")
 
 
-
 @client.route('/download_bill/<order_id>', methods=['GET'], endpoint='download_bill')
 # @token_required
 def download_bill(order_id):
@@ -329,5 +357,3 @@ def download_bill(order_id):
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
-

@@ -4,7 +4,7 @@
 
 {% block body %}
 
-     <div class="page-wrapper ms-0">
+    <div class="page-wrapper ms-0">
         <div class="content">
             <div class="row">
                 <div class="col-lg-8 col-sm-12 tabs_wrapper">
@@ -87,24 +87,24 @@
                                     <li>
                                         <a href="javascript:void(0);" class="paymentmethod" type="radio">
                                             <img src="/static/assets/img/icons/debitcard.svg" alt="img" class="me-2">
-                                            <input type="radio" name="payment" value="PayPal"> Online
+                                            <input type="radio" name="payment" value="Razorpay"> Online
                                         </a>
                                     </li>
                                 </ul>
 
 
-{#                                <label>#}
-{#                                    <input type="radio" name="payment" value="PayPal"> Online#}
-{#                                </label>#}
-{#                                <label>#}
-{#                                    <input type="radio" name="payment" value="Cash"> Cash#}
-{#                                </label>#}
+                                {#                                <label>#}
+                                {#                                    <input type="radio" name="payment" value="PayPal"> Online#}
+                                {#                                </label>#}
+                                {#                                <label>#}
+                                {#                                    <input type="radio" name="payment" value="Cash"> Cash#}
+                                {#                                </label>#}
                             </div>
                             <div class="btn-totallabel" onclick="submitOrder(event)">
                                 <h5>Checkout</h5>
                                 <h6 id="total-amount">00.00</h6>
                             </div>
-{#                            <button type="button" onclick="submitOrder(event)">Submit Order</button>#}
+                            {#                            <button type="button" onclick="submitOrder(event)">Submit Order</button>#}
                         </div>
                     </div>
                 </div>
@@ -112,47 +112,48 @@
         </div>
     </div>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-    let orderList = [];
+        let orderList = [];
 
-    // Function to add product to the order_routes list
-    function addToOrder(productId, productName, productPrice, stockQty , image) {
-        // Check if the product already exists in the order_routes list
-        let existingProduct = orderList.find(product => product.id === productId);
-        {#console.log(image)#}
-        if (existingProduct) {
-            // If the product exists, increase its quantity by 1, but not exceeding the available stock
-            if (existingProduct.qty < existingProduct.maxQty) {
-                existingProduct.qty += 1;
+        // Function to add product to the order_routes list
+        function addToOrder(productId, productName, productPrice, stockQty, image) {
+            // Check if the product already exists in the order_routes list
+            let existingProduct = orderList.find(product => product.id === productId);
+            {#console.log(image)#}
+            if (existingProduct) {
+                // If the product exists, increase its quantity by 1, but not exceeding the available stock
+                if (existingProduct.qty < existingProduct.maxQty) {
+                    existingProduct.qty += 1;
+                } else {
+                    alert('Cannot add more than available stock.');
+                }
             } else {
-                alert('Cannot add more than available stock.');
+                // Add new product to order_routes list if it doesn't exist
+                orderList.push({
+                    id: productId,
+                    image: image,
+                    name: productName,
+                    price: productPrice,
+                    qty: 1, // Default quantity
+                    maxQty: stockQty // Maximum available stock
+                });
             }
-        } else {
-            // Add new product to order_routes list if it doesn't exist
-            orderList.push({
-                id: productId,
-                image:image,
-                name: productName,
-                price: productPrice,
-                qty: 1, // Default quantity
-                maxQty: stockQty // Maximum available stock
-            });
+
+
+            renderOrderList();
+            calculateTotal();
         }
 
+        // Function to render the order_routes list
+        function renderOrderList() {
+            let orderListTable = document.getElementById('product-lists');
 
-        renderOrderList();
-        calculateTotal();
-    }
+            if (orderListTable) {
+                orderListTable.innerHTML = ''; // Clear the existing order list
 
-    // Function to render the order_routes list
-    function renderOrderList() {
-        let orderListTable = document.getElementById('product-lists');
-
-        if (orderListTable) {
-            orderListTable.innerHTML = ''; // Clear the existing order list
-
-            orderList.forEach((product, index) => {
-                orderListTable.innerHTML += `
+                orderList.forEach((product, index) => {
+                    orderListTable.innerHTML += `
 <ul class="product-lists" >
                                     <li>
                                         <div class="productimg">
@@ -185,199 +186,228 @@
                                           onclick="removeFromOrder(${index})"  src="/static/assets/img/icons/delete-2.svg" alt="img"></a></li>
                                 </ul>
             `;
-            });
-        } else {
-            console.error("Element with ID 'order-list' not found.");
-        }
-    }
-
-    {#<tr>#}
-    {#    <td></td>#}
-    {#    <td></td>#}
-    {#    <td>#}
-    {#        <input type="number" value="${product.qty}" min="1" max="${product.maxQty}"#}
-    {#               onchange="updateQty(${index}, this.value)" />#}
-    {#    </td>#}
-    {#    <td>#}
-    {#        <button type="button" onclick="removeFromOrder(${index})">Remove</button>#}
-    {#    </td>#}
-    {#</tr>#}
-
-    // Function to update the quantity of a product in the order_routes list
-    function updateQty(index, qty) {
-        if (qty <= orderList[index].maxQty) {
-            orderList[index].qty = parseInt(qty);
-        } else {
-            alert('Cannot exceed available stock.');
-            orderList[index].qty = orderList[index].maxQty;  // Reset to max stock if exceeded
-        }
-        renderOrderList();
-        calculateTotal();
-    }
-
-    // Function to remove a product from the order_routes list
-    function removeFromOrder(index) {
-        orderList.splice(index, 1);
-        renderOrderList();
-        calculateTotal();
-    }
-
-    // Function to calculate the total amount
-    function calculateTotal() {
-        let total = 0;
-        orderList.forEach(product => {
-            total += product.price * product.qty;
-        });
-
-        document.getElementById('total-amount').innerText = total.toFixed(2);
-    }
-
-    // Function to handle order_routes submission
-    function submitOrder(event) {
-        event.preventDefault();
-
-        // Get the selected payment type
-        let paymentType = document.querySelector('input[name="payment"]:checked').value;
-
-        if (orderList.length === 0) {
-            alert('Please add products to your order_routes.');
-            return;
-        }
-
-        if (!paymentType) {
-            alert('Please select a payment method.');
-            return;
-        }
-
-        // Prepare order_routes data
-        const orderData = {
-            products: orderList,
-            totalAmount: document.getElementById('total-amount').innerText,
-            paymentType: paymentType
-        };
-
-        console.log('Order Submitted:', orderData);
-        // Here, you would typically send the order_routes data to the backend using AJAX or form submission
-    }
-
-    function submitOrder(event) {
-        event.preventDefault();
-
-        let paymentType = document.querySelector('input[name="payment"]:checked').value;
-
-        if (orderList.length === 0) {
-            alert('Please add products to your order_routes.');
-            return;
-        }
-
-        if (!paymentType) {
-            alert('Please select a payment method.');
-            return;
-        }
-
-        const orderData = {
-            products: orderList,
-            totalAmount: document.getElementById('total-amount').innerText,
-            paymentType: paymentType
-        };
-
-        if (paymentType === 'Cash') {
-            // Directly submit order_routes data for Cash payment
-            fetch('/client/submitOrder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert('Order placed successfully!');
-                        window.location.href = data.url;
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
-        } else if (paymentType === 'Credit Card' || paymentType === 'PayPal') {
-            // Initiate Razorpay payment
-            let options = {
-                key: 'rzp_test_JWwpr1USWodaq9', // Replace with your Razorpay key
-                amount: orderData.totalAmount * 100, // Amount in paise
-                currency: 'INR',
-                name: 'Your Store Name',
-                description: 'Order Payment',
-                image: 'https://example.com/your_logo.jpg',
-                order_id: '', // This will be set after creating the order_routes on Razorpay
-                handler: function (response) {
-                    // Call your backend to verify the payment and store transaction details
-                    fetch('/orders/submitOrder', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            products: orderList,
-                            totalAmount: orderData.totalAmount,
-                            paymentType: paymentType,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                        })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                alert('Order placed successfully!');
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                },
-                prefill: {
-                    name: 'Customer Name',
-                    email: 'customer@example.com',
-                    contact: '9999999999'
-                },
-                notes: {
-                    address: 'Customer Address'
-                },
-                theme: {
-                    color: '#F37254'
-                }
+            } else {
+                console.error("Element with ID 'order-list' not found.");
+            }
+        }
+
+        {#<tr>#}
+        {#    <td></td>#}
+        {#    <td></td>#}
+        {#    <td>#}
+        {#        <input type="number" value="${product.qty}" min="1" max="${product.maxQty}"#}
+        {#               onchange="updateQty(${index}, this.value)" />#}
+        {#    </td>#}
+        {#    <td>#}
+        {#        <button type="button" onclick="removeFromOrder(${index})">Remove</button>#}
+        {#    </td>#}
+        {#</tr>#}
+
+        // Function to update the quantity of a product in the order_routes list
+        function updateQty(index, qty) {
+            if (qty <= orderList[index].maxQty) {
+                orderList[index].qty = parseInt(qty);
+            } else {
+                alert('Cannot exceed available stock.');
+                orderList[index].qty = orderList[index].maxQty;  // Reset to max stock if exceeded
+            }
+            renderOrderList();
+            calculateTotal();
+        }
+
+        // Function to remove a product from the order_routes list
+        function removeFromOrder(index) {
+            orderList.splice(index, 1);
+            renderOrderList();
+            calculateTotal();
+        }
+
+        // Function to calculate the total amount
+        function calculateTotal() {
+            let total = 0;
+            orderList.forEach(product => {
+                total += product.price * product.qty;
+            });
+
+            document.getElementById('total-amount').innerText = total.toFixed(2);
+        }
+
+        // Function to handle order_routes submission
+        {#function submitOrder(event) {#}
+        {#    event.preventDefault();#}
+        {##}
+        {#    // Get the selected payment type#}
+        {#    let paymentType = document.querySelector('input[name="payment"]:checked').value;#}
+        {##}
+        {#    if (orderList.length === 0) {#}
+        {#        alert('Please add products to your order_routes.');#}
+        {#        return;#}
+        {#    }#}
+        {##}
+        {#    if (!paymentType) {#}
+        {#        alert('Please select a payment method.');#}
+        {#        return;#}
+        {#    }#}
+        {##}
+        {#    // Prepare order_routes data#}
+        {#    const orderData = {#}
+        {#        products: orderList,#}
+        {#        totalAmount: document.getElementById('total-amount').innerText,#}
+        {#        paymentType: paymentType#}
+        {#    };#}
+        {##}
+        {#    console.log('Order Submitted:', orderData);#}
+        {#    // Here, you would typically send the order_routes data to the backend using AJAX or form submission#}
+
+        function submitOrder(event) {
+            event.preventDefault();
+
+            let paymentType = document.querySelector('input[name="payment"]:checked').value;
+
+            if (orderList.length === 0) {
+                alert('Please add products to your order_routes.');
+                return;
+            }
+
+            if (!paymentType) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            const orderData = {
+                products: orderList,
+                totalAmount: document.getElementById('total-amount').innerText,
+                paymentType: paymentType
             };
 
-            const rzp1 = new Razorpay(options);
-            rzp1.open();
-        }
-    }
+            if (paymentType === 'Cash') {
+                // Directly submit order_routes data for Cash payment
+                fetch('/client/submitOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Order placed successfully!');
+                            window.location.href = data.url;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else if (paymentType === 'Razorpay') {
+                // Step 1: Initiate Razorpay payment
+                fetch('/client/createRazorpayOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        totalAmount: Math.round(orderData.totalAmount) // Convert to paise and ensure integer value
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            console.log(data.amount)
+                            // Step 2: Setup Razorpay payment options
+                            const razorpayOptions = {
+                                key: 'rzp_test_51mQEdclvr946E', // Replace with your Razorpay key
+                                amount: data.amount, // Amount in paise (multiply by 100 to convert INR to paise)
+                                currency: 'INR',
+                                name: 'Your Store Name',
+                                description: 'Order Payment',
+                                order_id: data.razorpay_order_id, // Razorpay order ID from backend
+                                handler: function (response) {
+                                    // Step 3: Submit order data directly after payment success
+                                    fetch('/client/submitOrder', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            products: orderList,  // Array of products in the order
+                                            totalAmount: orderData.totalAmount,
+                                            paymentType: 'Razorpay', // Payment type is Razorpay
+                                            razorpay_payment_id: response.razorpay_payment_id,  // Razorpay Payment ID
+                                            razorpay_order_id: response.razorpay_order_id,  // Razorpay Order ID
+                                            razorpay_signature: response.razorpay_signature  // Razorpay Signature
+                                        })
+                                    })
+                                        .then(orderRes => orderRes.json())
+                                        .then(orderData => {
+                                            if (orderData.status === 'success') {
+                                                alert('Order placed successfully!');
+                                                window.location.href = orderData.url; // Redirect to the success page
+                                            } else {
+                                                alert(orderData.message);  // Error handling if order submission fails
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error submitting order:', error);
+                                            alert('There was an error placing your order.');
+                                        });
+                                },
+                                prefill: {
+                                    name: 'Customer Name',
+                                    email: 'customer@example.com',
+                                    contact: '9999999999'
+                                },
+                                notes: {
+                                    address: 'Customer Address'
+                                },
+                                theme: {
+                                    color: '#F37254'
+                                }
+                            };
 
-    function changeQty(index, action, maxQty) {
-        const inputField = document.getElementById(`quantity-${index}`);
-        let currentQty = parseInt(inputField.value);
+                            // Open Razorpay payment gateway
+                            const razorpay = new Razorpay(razorpayOptions);
+                            razorpay.open();
 
-        if (action === 'increment') {
-            // Check if we can increment without exceeding maxQty
-            if (currentQty < maxQty) {
-                currentQty += 1;
+                        } else {
+                            alert(data.message);  // Error if creating Razorpay order fails
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating Razorpay order:', error);
+                        alert('There was an error initiating the payment.');
+                    });
+
+
             }
-        } else if (action === 'decrement') {
-            // Ensure that the quantity is not decremented below 1
-            if (currentQty > 1) {
-                currentQty -= 1;
-            }
+
         }
 
-        // Update the input field with the new value
-        inputField.value = currentQty;
+        function changeQty(index, action, maxQty) {
+            const inputField = document.getElementById(`quantity-${index}`);
+            let currentQty = parseInt(inputField.value);
 
-        // Call the function to update the quantity elsewhere if needed
-        updateQty(index, currentQty);
-    }
-</script>
+            if (action === 'increment') {
+                // Check if we can increment without exceeding maxQty
+                if (currentQty < maxQty) {
+                    currentQty += 1;
+                }
+            } else if (action === 'decrement') {
+                // Ensure that the quantity is not decremented below 1
+                if (currentQty > 1) {
+                    currentQty -= 1;
+                }
+            }
+
+            // Update the input field with the new value
+            inputField.value = currentQty;
+
+            // Call the function to update the quantity elsewhere if needed
+            updateQty(index, currentQty);
+        }
+    </script>
 
 {% endblock body %}
