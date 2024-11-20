@@ -134,7 +134,10 @@ def dashboard(current_user, employee_id=None):
 
         # print(assigned_tasks[0].user_details.full_name)
         # print(assigned_tasks)
-        return render_template('dashboard/employee_dashboard.html', assigned_tasks=assigned_tasks)
+        if employee_id:
+            return render_template('dashboard/view_task.html', assigned_tasks=assigned_tasks)
+        else:
+            return render_template('dashboard/employee_dashboard.html', assigned_tasks=assigned_tasks)
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500

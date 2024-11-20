@@ -62,6 +62,7 @@
                                     <td>{{ users_list.city }}</td>
                                     <td>{{ users_list.role }}</td>
                                     <td>
+                                    {% if users_list.role != 'admin' %}
                                         <div class="status-toggle d-flex justify-content-between align-items-center">
                                             <input type="checkbox" id="user{{ loop.index }}" name="user{{ loop.index }}"
                                                    class="check"
@@ -69,15 +70,18 @@
                                                    onchange="toggleStatus('{{ users_list._id }}', this.checked)">
                                             <label for="user{{ loop.index }}" class="checktoggle">checkbox</label>
                                         </div>
+                                    {% endif %}
                                     </td>
                                     <td>
                                         <a class="me-3" href="/user/updateuser/{{ users_list._id }}">
                                             <img src="/static/assets/img/icons/edit.svg" alt="img">
                                         </a>
 
+                                        {% if users_list.role == 'employee' %}
                                         <a class="me-3" href="/employee/dashboard/{{ users_list._id }}">
                                             <img src="/static/assets/img/icons/eye.svg" alt="img">
                                         </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
