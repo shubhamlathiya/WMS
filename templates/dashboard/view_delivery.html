@@ -31,7 +31,7 @@
                             <table class="table datanew">
                                 <thead>
                                 <tr>
-                                    <th>Order ID</th>
+                                    <th>ID</th>
                                     <th>Products</th>
                                     <th>Total Amount</th>
                                     <th>Payment Type</th>
@@ -45,7 +45,7 @@
                                 <tbody>
                                 {% for order in orders_details %}
                                     <tr>
-                                        <td>{{ order.order_id }}</td>
+                                        <td>{{ loop.index }}</td>
                                         <td>
                                             <ul>
                                                 {% for product in order.products %}
@@ -60,7 +60,7 @@
                                         <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M:%S') if order.order_date }}</td>
                                         <td>{{ order.user_details.name }}</td>
                                         <td>{{ order.user_details.city }}</td>
-                                        <td>{{ order.user_details.area }}</td>
+                                       <td>{{ order.user_details.area }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

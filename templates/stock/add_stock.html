@@ -27,7 +27,10 @@
                                     </span>
                                         <input type="text" class="form-control" id="barcode" name="barcode" autofocus
                                                placeholder="Please Type SKU code or Scan SKU ..." required
-                                               onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                                               onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"
+                                                {% if stock_id %}
+                                               value="{{ stock_id }}"
+                                                {% endif %}>
                                         <span class="input-group-text">
                                         <a href="javascript:void(0);" type="button"
                                            onclick="fetchProduct()">Searching</a>
@@ -118,7 +121,7 @@
 
             const response = await fetch(`/stock/${barcode}`);
             const data = await response.json();
-            console.log(data)
+            {#console.log(data)#}
             if (response.ok) {
                 const stockInfoDiv = document.getElementById('stockInfo');
                 let tableHtml = `

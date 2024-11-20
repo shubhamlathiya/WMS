@@ -9,10 +9,14 @@ stock = Blueprint('stock', __name__)
 
 
 @stock.route('/managestock', methods=['GET'], endpoint='addstock')
+@stock.route('/product/managestock/<stock_id>', methods=['GET'], endpoint='addstockproducts')
 @token_required
 @role_required('stocks', 'create')
-def stock_home(current_user):
-    return render_template('stock/add_stock.html')
+def stock_home(current_user, stock_id=None):
+    if stock_id:
+        return render_template('stock/add_stock.html', stock_id=stock_id)
+    else:
+        return render_template('stock/add_stock.html', stock_id=stock_id)
 
 
 # @stock.route('/removestock', methods=['GET'], endpoint='stock_remove')

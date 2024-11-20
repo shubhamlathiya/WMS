@@ -60,15 +60,15 @@
                                     <td>{{ products_list.status }}</td>
                                     {#                                    <td>{{ products_list.description }}</td>#}
                                     <td>
-                                        <a class="me-3" href="#">
+                                        <a class="me-3" href="/stock/product/managestock/{{ products_list.sku }}">
                                             <img src="/static/assets/img/icons/eye.svg" alt="img">
                                         </a>
                                         <a class="me-3" href="/product/updateproduct/{{ products_list.sku }}">
                                             <img src="/static/assets/img/icons/edit.svg" alt="img">
                                         </a>
-{#                                        <a class="confirm-text" href="javascript:void(0);">#}
-{#                                            <img src="/static/assets/img/icons/delete.svg" alt="img">#}
-{#                                        </a>#}
+                                        {#                                        <a class="confirm-text" href="javascript:void(0);">#}
+                                        {#                                            <img src="/static/assets/img/icons/delete.svg" alt="img">#}
+                                        {#                                        </a>#}
                                     </td>
                                 </tr>
                             {% endfor %}
