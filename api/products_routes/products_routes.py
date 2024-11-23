@@ -115,6 +115,7 @@ def add_product(current_user):
             'created_by': role,
             'area_id': ObjectId(area),
             'image': normalized_path,
+            'created_at': datetime.now()
         }
 
         # Insert the product into MongoDB
@@ -213,5 +214,3 @@ def fetch_product_by_sku(current_user, sku):  # Reorder parameters, so current_u
             return jsonify({"error": "Product not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-

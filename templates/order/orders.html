@@ -35,6 +35,7 @@
                                 <th>Payment Status</th>
                                 <th>Payment Type</th>
                                 <th>Status</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -62,6 +63,12 @@
                                     {% else %}
                                         <td><span class="badges bg-lightgreen">{{ orders_list.status }}</span></td>
                                     {% endif %}
+                                    <td>
+                                        <a class="me-3" href="/client/download_bill/{{ orders_list.order_id }}"
+                                           target="_blank">
+                                            <img src="/static/assets/img/icons/printer.svg" alt="img">
+                                        </a>
+                                    </td>
                                     {#                                <td>{{ orders_list.status }}</td>#}
                                 </tr>
                             {% endfor %}

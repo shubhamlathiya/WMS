@@ -47,27 +47,5 @@ def history(current_user):
 def history(current_user, order_id):
     # Fetch the orders for the current user
     orders = list(mongo.db.orders.find({"_id": ObjectId(order_id)}))
-    #
-    # print(list(orders))
-    # return jsonify('status': orders)
-    # order_list = []
-    #
-    # for order in orders:
-    #     # Assuming you have a 'transaction' collection for payment details
-    #     transaction = mongo.db.transactions.find_one({"order_id": order['_id']})
-    #
-    #     order_data = {
-    #         "total_amount": order.get("total_amount", 0),
-    #         "payment_type": order.get("payment_type", "N/A"),
-    #         'status': order.get('status', [])[-1]['status'] if order.get('status', []) else '',
-    #         "products": order.get("products", []),
-    #         "order_date": order.get("order_date", ""),
-    #         "payment_status": transaction.get("payment_status", "N/A") if transaction else "N/A"
-    #         # Link with transaction collection
-    #     }
-    #
-    #     order_list.append(order_data)
 
-    # print()
-    # Pass the data to the template
     return render_template('client/timeline.html', timeline=orders[0]['status'])
