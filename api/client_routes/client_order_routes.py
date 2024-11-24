@@ -79,7 +79,7 @@ def submit_order(current_user):
     try:
         # Parse order details
         userdata = mongo.db.users.find_one({'email': current_user})
-        print(userdata)
+        # print(userdata)
         if userdata['city'] is None and userdata['area'] is None and userdata['address'] is None:
             return jsonify(
                 {'status': 'error', 'message': 'please update your profile in area'}

@@ -18,19 +18,19 @@ def dashboard_home(current_user):
         {"$match": {"role": "client"}},
         {"$count": "totalClients"}
     ]))
-    print(totalClients[0]['totalClients'])
+    # print(totalClients[0]['totalClients'])
 
     totalSuppliers = list(mongo.db.users.aggregate([
         {"$match": {"role": "supplier"}},
         {"$count": "totalSuppliers"}
     ]))
-    print(totalSuppliers[0]['totalSuppliers'])
+    # print(totalSuppliers[0]['totalSuppliers'])
 
     totalEmployee = list(mongo.db.users.aggregate([
         {"$match": {"role": "employee"}},
         {"$count": "totalEmployee"}
     ]))
-    print(totalEmployee[0]['totalEmployee'])
+    # print(totalEmployee[0]['totalEmployee'])
 
     now = datetime.now()
     start_of_month = datetime(now.year, now.month, 1)  # Start of the current month

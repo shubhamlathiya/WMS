@@ -163,7 +163,7 @@ def get_all_products(current_user):
 @role_required('products', 'edit')
 def update_user(current_user, sku):
     try:
-        print(sku)
+        # print(sku)
         product_name = request.form.get('productName')
         price = request.form.get('price')
         status = request.form.get('status')
@@ -173,7 +173,7 @@ def update_user(current_user, sku):
         area = request.form.get('area')
 
         role = session.get('role')
-        print(role)
+        # print(role)
         mongo.db.products.update_one(
             {'sku': sku},
             {
@@ -189,7 +189,7 @@ def update_user(current_user, sku):
                 }
             }
         )
-        print("sku")
+        # print("sku")
         return redirect('/product/viewproduct')
 
     except Exception as e:
@@ -198,13 +198,13 @@ def update_user(current_user, sku):
 
 
 @product.route('/scan/<int:sku>', methods=['GET'], endpoint='productsscan')
-@token_required
-def fetch_product_by_sku(current_user, sku):  # Reorder parameters, so current_user is the first argument
+# @token_required
+def fetch_product_by_sku(sku):  # Reorder parameters, so current_user is the first argument
     try:
         # print(f"Current User: {current_user}")  # Debug to ensure current_user is received
         # print(f"SKU: {sku}")  # Debug to ensure sku is received
         product = mongo.db.products.find_one({"sku": sku})
-        print(product)
+        # print(product)
         if product:
             return jsonify({
                 "product_name": product['product_name'],

@@ -21,10 +21,10 @@ def area_home(current_user):
 @role_required('areas', 'create')
 def add_area(current_user):
     try:
-        print(current_user)
+        # print(current_user)
         name = request.form.get('areaName')
         no_box = request.form.get('boxNo')
-        print(name)
+        # print(name)
         found = mongo.db.areas.find_one({'area_name': name})
         # print(list(found))
         # if found:
