@@ -23,7 +23,7 @@ def dashboard(current_user, employee_id=None):
         else:
             userid = session['user_id']
 
-        print(userid)
+        # print(userid)
         assigned_tasks = list(mongo.db.assigned_tasks.aggregate([
             {
                 '$match': {
@@ -150,7 +150,7 @@ def dashboard(current_user, employee_id=None):
 @role_required('employee_dashboard', 'edit')
 def update_order_status(current_user, order_id):
     try:
-        print(f"updated : {order_id}")
+        # print(f"updated : {order_id}")
 
         # Step 1: Update order status to 'Shipment Ready' in the orders collection
         mongo.db.orders.update_one(
@@ -162,7 +162,7 @@ def update_order_status(current_user, order_id):
                 }
             }}
         )
-        print("1")
+        # print("1")
 
         # Step 2: Update the assigned_tasks collection
         mongo.db.assigned_tasks.update_one(
@@ -174,7 +174,7 @@ def update_order_status(current_user, order_id):
             }
         )
 
-        print("2")
+        # print("2")
         # Fetch the order details
         order = mongo.db.orders.find_one({'_id': ObjectId(order_id)})
         if not order:
@@ -186,7 +186,7 @@ def update_order_status(current_user, order_id):
             return jsonify({'status': 'error', 'message': 'Client not found'}), 404
 
         client_city = client['city']
-        print("3")
+        # print("3")
 
         # Step 3: Find available suppliers in the client's city
         available_suppliers = list(mongo.db.users.find({
@@ -198,7 +198,7 @@ def update_order_status(current_user, order_id):
         if not available_suppliers:
             return jsonify({'status': 'error', 'message': 'No available suppliers in the client\'s city'}), 404
 
-        print("4")
+        # print("4")
 
         # Step 4: Assign the order to the first available supplier
         assigned_supplier = available_suppliers[0]
@@ -224,7 +224,7 @@ def update_order_status(current_user, order_id):
                 }
             }}
         )
-        print("5")
+        # print("5")
         return jsonify({'status': 'success', 'message': 'Order assigned to supplier successfully.'}), 200
 
     except Exception as e:
