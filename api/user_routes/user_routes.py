@@ -242,9 +242,9 @@ def update_user(current_user, user_id):
         return redirect('/user/viewuser')
 
 
-@user.route('/user_status', methods=['POST'])
+@user.route('/user_status', methods=['POST'],endpoint='userStatus')
 @token_required
-def user_status():
+def user_status(current_user):
     data = request.get_json()
 
     user_id = data.get('user_id')  # User ID passed from the client-side
