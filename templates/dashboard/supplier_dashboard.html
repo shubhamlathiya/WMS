@@ -45,9 +45,9 @@
                                     <th>Order Date</th>
                                     <th>User Name</th>
                                     <th>City</th>
-                                    <th>Area</th>
                                     <th>Status</th>
                                     <th>Actions</th>
+                                    <th>Address</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -72,7 +72,6 @@
                                         <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M:%S') if order.order_date }}</td>
                                         <td>{{ order.user_details.name }}</td>
                                         <td>{{ order.user_details.city }}</td>
-                                        <td>{{ order.user_details.area }}</td>
                                         <td>{{ order.status }}</td>
                                         <td>
                                             <!-- Button to trigger "Pick Up" -->
@@ -88,6 +87,8 @@
                                                 </button>
                                             {% endif %}
                                         </td>
+                                        <td>{{ order.user_details.area }}</td>
+
                                     </tr>
                                 {% endfor %}
                                 </tbody>

@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from flask import Flask, request, jsonify, render_template, Blueprint
-from fontTools.misc.cython import returns
+# from fontTools.misc.cython import returns
 
 from middleware.auth_middleware import token_required
 from middleware.page_visibility_middleware import role_required
