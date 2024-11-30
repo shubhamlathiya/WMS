@@ -75,7 +75,7 @@ The system underwent rigorous testing:
 ---
 
 ### 📜 Authors
-- **Shubham Lathiya** ([GitHub Profile](https://github.com/your-github))
+- **Shubham Lathiya** ([GitHub Profile](https://github.com/shubhamlathiya))
 - **Priyank Mangaroliya**
 
 ### 📚 References
