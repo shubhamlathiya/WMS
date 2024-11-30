@@ -38,7 +38,7 @@ The **Warehouse Management System (WMS)** is designed to improve warehouse opera
 ---
 
 ### 🖼️ Application Snapshots
-![Sign In Page](./images/sign_in.png)
+![Sign In Page](./images/login.png)
 ![Admin Dashboard](./images/admin_dashboard.png)
 ![Order Management](./images/order_management.png)
 
