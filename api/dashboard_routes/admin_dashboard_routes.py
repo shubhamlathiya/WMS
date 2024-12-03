@@ -32,22 +32,18 @@ def dashboard_home(current_user):
     ]))
     # print(totalEmployee[0]['totalEmployee'])
 
-    now = datetime.now()
-    start_of_month = datetime(now.year, now.month, 1)  # Start of the current month
-    end_of_month = datetime(now.year, now.month + 1, 1) - timedelta(seconds=1)  # Last second of the current month
+    # Get the start and end dates for the current month
+    start_of_month, end_of_month = get_month_date_range()
+
     # Run the query to find the total number of orders for the current month
-    totalOrders = list(mongo.db.orders.aggregate([
-        # Match orders where the order_date is in the current month
-        {"$match": {
-            "order_date": {
-                "$gte": start_of_month,
-                "$lt": end_of_month
-            }
-        }},
-        # Count the total number of matched orders
+    pipeline = [
+        {"$match": {"order_date": {"$gte": start_of_month, "$lt": end_of_month}}},
         {"$count": "totalOrders"}
-    ]))
-    # print(totalOrders[0]['totalOrders'])
+    ]
+    total_orders_result = list(mongo.db.orders.aggregate(pipeline))
+
+    # Extract total orders count if available
+    total_orders = total_orders_result[0]['totalOrders'] if total_orders_result else 0
 
     recently_product = recently_added_products()
     recently_stock = list(recently_added_products_stock())
@@ -58,7 +54,7 @@ def dashboard_home(current_user):
                            totalClients=totalClients[0]['totalClients'],
                            totalSuppliers=totalSuppliers[0]['totalSuppliers'],
                            totalEmployee=totalEmployee[0]['totalEmployee'],
-                           totalOrders = totalOrders[0]['totalOrders'],)
+                           totalOrders = total_orders,)
 
 
 def recently_added_products():
@@ -109,3 +105,14 @@ def recently_added_products_stock():
     ])
 
     return recent_product_with_plus_qty
+
+def get_month_date_range():
+    now = datetime.now()
+    start_of_month = datetime(now.year, now.month, 1)  # Start of the current month
+    if now.month == 12:
+        # Transition to next year for December
+        end_of_month = datetime(now.year + 1, 1, 1) - timedelta(seconds=1)
+    else:
+        # General case for other months
+        end_of_month = datetime(now.year, now.month + 1, 1) - timedelta(seconds=1)
+    return start_of_month, end_of_month
